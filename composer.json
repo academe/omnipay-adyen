@@ -1,0 +1,41 @@
+{
+    "name": "academe/omnipay-adyen",
+    "type": "library",
+    "description": "Adyen driver for the Omnipay payment processing library",
+    "keywords": [
+        "adyen",
+        "gateway",
+        "merchant",
+        "omnipay",
+        "pay",
+        "payment"
+    ],
+    "homepage": "https://github.com/academe/omnipay-adyen",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jason Judge",
+            "email": "jason@academe.co.uk"
+        },
+        {
+            "name": "Omnipay Contributors",
+            "homepage": "https://github.com/thephpleague/omnipay-dummy/contributors"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "Omnipay\\Adyen\\" : "src/" }
+    },
+    "require": {
+        "omnipay/common": "~3.0"
+    },
+    "require-dev": {
+        "omnipay/tests": "~3.0",
+        "squizlabs/php_codesniffer": "~3.0"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "3.0.x-dev"
+        }
+    },
+    "prefer-stable": true
+}
