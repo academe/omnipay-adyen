@@ -259,6 +259,8 @@ your site, along with any additional details.
 The encrpyted details are then used in place of credit card details when making
 an autorisation request to the API, server-to-server.
 
+### Building a Form for Encryting
+
 The client-side fuctionality can be completely built by hand, but the following
 minimal example shows how this library can help build it.
 The *laravel blade* view format is used in the example.

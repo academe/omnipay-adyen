@@ -60,6 +60,7 @@ class AuthorizeRequest extends AbstractHppRequest
             $billingAddressType = '1';
         } else {
             // Not locked nor hidden.
+            // Some documentation pages specify this should be '0' and others as ''.
             $billingAddressType = '';
         }
 

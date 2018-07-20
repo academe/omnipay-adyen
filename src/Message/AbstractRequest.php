@@ -128,35 +128,6 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     }
 
     /**
-     * Send the request with specified data.
-     * This possibly needs to supply Basic Auth credentials when
-     * making any request.
-     *
-     * @param  array $data The data to send
-     * @return Omnipay\Common\Message\ResponseInterface
-     * @throws InvalidRequestException
-     */
-    public function sendData($data)
-    {
-        $auth = $this->getUsername() . ':' . $this->getPassword();
-
-        $response = $this->httpClient->request(
-            'POST',
-            $this->getEndpoint(),
-            [
-                'Content-Type' => 'application/json',
-                // Basic auth header.
-                'Authorization' => 'Basic ' . base64_encode($auth)
-            ],
-            json_encode($data)
-        );
-
-        $payload = $this->getJsonData($response);
-
-        return $this->createResponse($payload);
-    }
-
-    /**
      * The Diectory URL has no parameters.
      */
     public function getDirectoryUrl()

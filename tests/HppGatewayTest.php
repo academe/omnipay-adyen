@@ -1,16 +1,16 @@
 <?php
 
-namespace Omnipay\Dummy;
+namespace Omnipay\Adyen;
 
 use Omnipay\Tests\GatewayTestCase;
 
-class GatewayTest extends GatewayTestCase
+class HppGatewayTest extends GatewayTestCase
 {
     public function setUp()
     {
         parent::setUp();
 
-        $this->gateway = new Gateway($this->getHttpClient(), $this->getHttpRequest());
+        $this->gateway = new HppGateway($this->getHttpClient(), $this->getHttpRequest());
     }
 
     public function testAuthorize()
@@ -21,7 +21,7 @@ class GatewayTest extends GatewayTestCase
         );
         $request= $this->gateway->authorize($options);
 
-        $this->assertInstanceOf('\Omnipay\Dummy\Message\CreditCardRequest', $request);
+        $this->assertInstanceOf(\Omnipay\Adyen\Message\Hpp\AuthorizeRequest::class, $request);
         $this->assertArrayHasKey('amount', $request->getData());
     }
 
@@ -33,7 +33,7 @@ class GatewayTest extends GatewayTestCase
         );
         $request= $this->gateway->purchase($options);
 
-        $this->assertInstanceOf('\Omnipay\Dummy\Message\CreditCardRequest', $request);
+        $this->assertInstanceOf(\Omnipay\Adyen\Message\Hpp\PurchaseRequest::class, $request);
         $this->assertArrayHasKey('amount', $request->getData());
     }
 
@@ -44,7 +44,7 @@ class GatewayTest extends GatewayTestCase
         );
         $request= $this->gateway->completeAuthorize($options);
 
-        $this->assertInstanceOf('\Omnipay\Dummy\Message\TransactionReferenceRequest', $request);
+        $this->assertInstanceOf(\Omnipay\Adyen\Message\Hpp\CompleteAuthorizeRequest::class, $request);
         $this->assertArrayHasKey('transactionReference', $request->getData());
     }
 
@@ -55,7 +55,7 @@ class GatewayTest extends GatewayTestCase
         );
         $request= $this->gateway->capture($options);
 
-        $this->assertInstanceOf('\Omnipay\Dummy\Message\TransactionReferenceRequest', $request);
+        $this->assertInstanceOf('\Omnipay\Adyen\Message\TransactionReferenceRequest', $request);
         $this->assertArrayHasKey('transactionReference', $request->getData());
     }
 
@@ -66,7 +66,7 @@ class GatewayTest extends GatewayTestCase
         );
         $request= $this->gateway->completePurchase($options);
 
-        $this->assertInstanceOf('\Omnipay\Dummy\Message\TransactionReferenceRequest', $request);
+        $this->assertInstanceOf('\Omnipay\Adyen\Message\TransactionReferenceRequest', $request);
         $this->assertArrayHasKey('transactionReference', $request->getData());
     }
 
@@ -77,7 +77,7 @@ class GatewayTest extends GatewayTestCase
         );
         $request= $this->gateway->refund($options);
 
-        $this->assertInstanceOf('\Omnipay\Dummy\Message\TransactionReferenceRequest', $request);
+        $this->assertInstanceOf('\Omnipay\Adyen\Message\TransactionReferenceRequest', $request);
         $this->assertArrayHasKey('transactionReference', $request->getData());
     }
 
@@ -88,7 +88,7 @@ class GatewayTest extends GatewayTestCase
         );
         $request= $this->gateway->void($options);
 
-        $this->assertInstanceOf('\Omnipay\Dummy\Message\TransactionReferenceRequest', $request);
+        $this->assertInstanceOf('\Omnipay\Adyen\Message\TransactionReferenceRequest', $request);
         $this->assertArrayHasKey('transactionReference', $request->getData());
     }
 
@@ -100,7 +100,7 @@ class GatewayTest extends GatewayTestCase
         );
         $request= $this->gateway->createCard($options);
 
-        $this->assertInstanceOf('\Omnipay\Dummy\Message\CreditCardRequest', $request);
+        $this->assertInstanceOf('\Omnipay\Adyen\Message\CreditCardRequest', $request);
         $this->assertArrayHasKey('amount', $request->getData());
     }
 
@@ -111,7 +111,7 @@ class GatewayTest extends GatewayTestCase
         );
         $request= $this->gateway->updateCard($options);
 
-        $this->assertInstanceOf('\Omnipay\Dummy\Message\CardReferenceRequest', $request);
+        $this->assertInstanceOf('\Omnipay\Adyen\Message\CardReferenceRequest', $request);
         $this->assertArrayHasKey('cardReference', $request->getData());
     }
 
@@ -122,7 +122,7 @@ class GatewayTest extends GatewayTestCase
         );
         $request= $this->gateway->deleteCard($options);
 
-        $this->assertInstanceOf('\Omnipay\Dummy\Message\CardReferenceRequest', $request);
+        $this->assertInstanceOf('\Omnipay\Adyen\Message\CardReferenceRequest', $request);
         $this->assertArrayHasKey('cardReference', $request->getData());
     }
 }
