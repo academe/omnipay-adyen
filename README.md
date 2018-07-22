@@ -13,6 +13,7 @@ Table of Contents
 =================
 
    * [Omnipay: Adyen](#omnipay-adyen)
+   * [Table of Contents](#table-of-contents)
       * [Installation](#installation)
       * [Hosted Payment Pages (HPP)](#hosted-payment-pages-hpp)
          * [Server Fetches Payment Methods](#server-fetches-payment-methods)
@@ -20,7 +21,9 @@ Table of Contents
          * [HPP Authorises a Payment](#hpp-authorises-a-payment)
             * [Prepare for Redirect](#prepare-for-redirect)
             * [Complete Transaction on Return](#complete-transaction-on-return)
+         * [Capture the Authorisation](#capture-the-authorisation)
       * [Client Side Encryption (CSE)](#client-side-encryption-cse)
+         * [Building a Form for Encryting](#building-a-form-for-encryting)
          * [An Encypted Card Authorises a Payment](#an-encypted-card-authorises-a-payment)
       * [Support](#support)
 
@@ -282,7 +285,7 @@ The result of the capture will be returned via the `notificaton`
 channel, so at this point you do not know whether the capture will
 be successful.
 
-Once it is captured, if can be refunded in total or in part using
+Once it is captured, it can be refunded in total or in part using
 the `$gateway->refund([...])` message, taking the same paramers as
 `capture`.
 
