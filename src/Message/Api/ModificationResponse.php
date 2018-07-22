@@ -15,6 +15,7 @@ class ModificationResponse extends AbstractResponse
     const RESPONSE_CANCEL_RECEIVED = '[cancel-received]';
     const RESPONSE_CAPTURE_RECEIVED = '[capture-received]';
     const RESPONSE_REFUND_RECEIVED = '[refund-received]';
+    const RESPONSE_CANCEL_REFUND_RECEIVED = '[cancelOrRefund-received]';
 
     /**
      * Successful if no errors were detected.

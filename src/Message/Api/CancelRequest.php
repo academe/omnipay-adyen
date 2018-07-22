@@ -12,7 +12,9 @@ class CancelRequest extends AbstractApiRequest
 {
     public function getEndPoint($service = null)
     {
-        return $this->getPaymentUrl('cancel');
+        $service = ($this->getRefundIfCaptured() ? 'cancelOrRefund' : 'cancel');
+
+        return $this->getPaymentUrl($service);
     }
 
     public function getData()
@@ -36,5 +38,26 @@ class CancelRequest extends AbstractApiRequest
     public function createResponse($payload)
     {
         return new ModificationResponse($this, $payload);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRefundIfCaptured()
+    {
+        return $this->getParameter('refundIfCaptured');
+    }
+
+    /**
+     * If set, then when performing a void, then if the authorisation
+     * has already been cleared, a full `refund` will be performed
+     * automatically in place of the `cancel`.
+     *
+     * @param mixed $value Treated as boolean
+     * @return $this
+     */
+    public function setRefundIfCaptured($value)
+    {
+        return $this->setParameter('refundIfCaptured', $value);
     }
 }
