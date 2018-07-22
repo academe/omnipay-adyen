@@ -3,12 +3,10 @@
 namespace Omnipay\Adyen\Message\Api;
 
 /**
- * Send the user to the Hosted Payment Page to authorize their payment.
+ * Capture an authorisation.
  */
 
-use Omnipay\Adyen\Message\AbstractApiRequest;
-
-class CaptureRequest extends AbstractApiRequest
+class CaptureRequest extends CancelRequest
 {
     public function getEndPoint($service = null)
     {
@@ -17,13 +15,7 @@ class CaptureRequest extends AbstractApiRequest
 
     public function getData()
     {
-        $data = $this->getBaseData();
-
-        $data['originalReference'] = $this->getTransactionReference();
-
-        if ($transactionId = $this->getTransactionId()) {
-            $data['reference'] = $transactionId;
-        }
+        $data = parent::getData();
 
         $data['modificationAmount'] = [
             'currency' => $this->getCurrency(),
@@ -36,10 +28,5 @@ class CaptureRequest extends AbstractApiRequest
         //    /modificationrequest/modificationrequest-additionaldata
 
         return $data;
-    }
-
-    public function createResponse($payload)
-    {
-        return new CaptureResponse($this, $payload);
     }
 }

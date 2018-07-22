@@ -42,6 +42,8 @@ abstract class AbstractApiRequest extends AbstractRequest
      */
     public function getBaseData($data = [])
     {
+        $this->validate('username', 'password', 'merchantAccount');
+
         $data['merchantAccount'] = $this->getMerchantAccount();
 
         return $data;

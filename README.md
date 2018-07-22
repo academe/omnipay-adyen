@@ -247,7 +247,52 @@ so you can confirm it is the result of the transaction you are expecting
 (it is vital to check the `transactionId`) so URLs from pevious authorisations
 cannot be injected by an end user.
 
-TODO: API `fetchTransaction()`
+### Capture the Authorisation
+
+The HPP reqeust will only authorise a payment.
+It still needs to be captured.
+
+Requesting a capture of the payment is done like this:
+
+```
+$gateway = Omnipay\Omnipay::create('Adyen\Hpp');
+
+$gateway->initialize([
+    'merchantAccount' => $merchantAccount,
+    'testMode' => true,
+    'currency' => 'EUR',
+    'username' => $username,
+    'password' => $password,
+]);
+
+$request = $gateway->capture(
+    // The original transaction reference of the authorisation.
+    'transactionReference' => $transactionReference,
+    // The original amount in full or partial amount.
+    'amount' => 9.99,
+    // Optionally you can give the request your own reference.
+    'transactionId' => $captureTransactionId,
+]);
+```
+
+The response you get back will return `isSuccessful() === true'
+if the request to capture was accepted.
+**Note** however that this is just a request to the gateway.
+The result of the capture will be returned via the `notificaton`
+channel, so at this point you do not know whether the capture will
+be successful.
+
+Once it is captured, if can be refunded in total or in part using
+the `$gateway->refund([...])` message, taking the same paramers as
+`capture`.
+
+Before the authorisation is captured, the authorisation can be
+cancelled completely using `$gateway->void([...])`.
+The `void` message does not need an `amount`, as it aims to void
+the entire authorisation.
+
+Like for `capture`, both `void` and `refund` are just pending results,
+with the final result being supplied by a `notification`.
 
 ## Client Side Encryption (CSE)
 
