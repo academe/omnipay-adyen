@@ -14,6 +14,7 @@ use Omnipay\Adyen\Message\Hpp\CompleteAuthorizeRequest;
 use Omnipay\Adyen\Message\Api\CancelRequest;
 use Omnipay\Adyen\Message\Api\CaptureRequest;
 use Omnipay\Adyen\Message\Api\RefundRequest;
+use Omnipay\Adyen\Message\Api\NotificationRequest;
 
 class HppGateway extends AbstractGateway
 {
@@ -79,5 +80,14 @@ class HppGateway extends AbstractGateway
     public function refund(array $parameters = array())
     {
         return $this->createRequest(RefundRequest::class, $parameters);
+    }
+
+    /**
+     * @param  array $parameters
+     * @return NotificationRequest
+     */
+    public function acceptNotification(array $parameters = [])
+    {
+        return $this->createRequest(NotificationRequest::class, $parameters);
     }
 }

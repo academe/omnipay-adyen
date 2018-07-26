@@ -10,6 +10,11 @@ use Omnipay\Adyen\Message\AbstractApiRequest;
 
 class CancelRequest extends AbstractApiRequest
 {
+    /**
+     * TODO: there is also a `technicalCancel` service where the
+     * originalMerchantReference (original transactionid) can be supplied
+     * instead of the originalPspReferenec (transactionReference).
+     */
     public function getEndPoint($service = null)
     {
         $service = ($this->getRefundIfCaptured() ? 'cancelOrRefund' : 'cancel');

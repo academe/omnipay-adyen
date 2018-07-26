@@ -254,8 +254,12 @@ cannot be injected by an end user.
 
 The HPP reqeust will only authorise a payment.
 It still needs to be captured.
+Auto-capture *can* be turned on in the account control panel, but it will be
+off by default.
+It can also be turned on with a delay, so can auto-capture after a set number
+of days. 
 
-Requesting a capture of the payment is done like this:
+Programatically requesting a capture of the payment is done like this:
 
 ```
 $gateway = Omnipay\Omnipay::create('Adyen\Hpp');

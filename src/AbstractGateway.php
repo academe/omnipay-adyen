@@ -32,7 +32,8 @@ abstract class AbstractGateway extends CommonAbstractGateway
             'skinCode' => null,
             // The sectet used for HMAC signing (HPP API)
             'secret' => null,
-            'currency' => 'EUR',
+            // Cannot default currency without failing the tests.
+            //'currency' => 'EUR',
             // publicKeyToken aka Library Token.
             'publicKeyToken' => null,
             // WebServiceUser credentials (basic auth for server API).
