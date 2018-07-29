@@ -376,6 +376,67 @@ This is the server-side handling.
 
 TODO...
 
+## Notifications
+
+The Adyen APIs are by nature asynchronous.
+Just about every event can generate a notification to your application.
+By default, no notifications are sent, but they can be set up in the
+administratino pages.
+
+For security, the notifications can use Basic Auth to access your pages,
+and a signature based on some key fields provides confirmation that those
+fields have not been changed en-route.
+*At the time of writing, neither of these features are working, but some
+tickets have been raised to resolve these issues.*
+
+Notifications can be sent as SOAP, JSON or Form POST messages.
+This driver supports both JSON and Form POST.
+
+The notification request is captured at the notifications endpoint like this:
+
+```php
+$gateway = Omnipay\Omnipay::create('Adyen\Api');
+
+$gateway->initialize([
+    'testMode' => true,
+    // For validating signatures (optional).
+    'secret' => $hmac,
+    // For validating Basic Auth (optional).
+    'username' => $username,
+    'password' => $password,
+]);
+
+$request = $gateway->acceptNotification();
+```
+
+The `%request` will supply a wealth of information regarding the notification,
+examples of which include:
+
+```php
+// The eventCodel; the type of event.
+$request->getEventCode()
+
+// Merchant site transaction ID.
+$request->getTransactionId()
+
+// Gateway transaction ID.
+$request->getTransactionReference()
+
+// The Auth Code.
+$request->getAuthCode()
+
+// The amount requested as a Noney object.
+$request->getAmountMoney()
+
+// The captured billing address (returns an array if present).
+$request->getBillingAddress()
+
+// Indicates whether this is a live account (not testing).
+$request->getLive()
+```
+
+TODO: implementing the response to the gateway
+
 ## Support
 
 If you are having general issues with Omnipay, we suggest posting on

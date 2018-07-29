@@ -66,8 +66,8 @@ abstract class AbstractHppRequest extends AbstractRequest
      *
      * @see https://docs.adyen.com/developers/hpp-manual#hpphmaccalculation
      */
-    public function generateSignature(array $data) {
-
+    public function generateSignature(array $data)
+    {
         // base64-encode the binary result of the HMAC computation.
 
         return base64_encode(hash_hmac(

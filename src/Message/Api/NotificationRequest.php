@@ -533,33 +533,47 @@ class NotificationRequest extends AbstractRequest implements NotificationInterfa
     }
 
     /**
-     * Construct the HMAC string for this request.
+     * Construct the HMAC string for this notification server request.
+     * A specific list of fields are included.
      */
-    public function getHmacString()
+    public function getSigningString()
     {
-        $parts = [];
+        $data = [];
 
-        $parts[] = $this->getPspReference() ?: '';
-        $parts[] = $this->getOriginalTransactionReference() ?: '';
-        $parts[] = $this->getMerchantAccountCode() ?: '';
-        $parts[] = $this->getMerchantReference() ?: '';
-        $parts[] = (string)$this->getAmountInteger() ?: '';
-        $parts[] = $this->getCurrencyCode() ?: '';
-        $parts[] = $this->getEventCode() ?: '';
-        $parts[] = $this->getSuccess() ? 'true' : 'false';
+        $data['pspReference'] = $this->getPspReference() ?: '';
+        $data['originalReference'] = $this->getOriginalTransactionReference() ?: '';
+        $data['merchantAccountCode'] = $this->getMerchantAccountCode() ?: '';
+        $data['merchantReference'] = $this->getMerchantReference() ?: '';
+        $data['value'] = (string)$this->getAmountInteger();
+        $data['currency'] = $this->getCurrencyCode() ?: '';
+        $data['eventCode'] = $this->getEventCode() ?: '';
+        $data['success'] = $this->getSuccess() ? 'true' : 'false';
 
-        /*
-        // Not yet working. Perhaps there is a separate HMAC key for notifications?
-        $x = base64_encode(hash_hmac(
+        // TODO: escape ':' to '\:' and '\' to '\\' in all values
+        // before imploding.
+
+        return implode(':', $data);
+    }
+
+    /**
+     * Generate the HMAC signature from the relavent fields
+     * in the notification.
+     * Note: this is NOT working at present, and there are no examples
+     * of the signatures being used with PHP in any projects that I
+     * can find.
+     *
+     * @return string
+     */
+    public function generateSignature()
+    {
+        // base64-encode the binary result of the HMAC computation.
+
+        return base64_encode(hash_hmac(
             'sha256',
-            implode(':', $parts),
-            pack("H*", $this->getSecret()),
+            $this->getSigningString(),
+            pack("H*", $this->getSecret()), // Equivalent to hex2bin()
             true
         ));
-        var_dump($x);
-        */
-
-        return implode(':', $parts);
     }
 
     /**
