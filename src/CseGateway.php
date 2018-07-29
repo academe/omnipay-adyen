@@ -11,7 +11,7 @@ namespace Omnipay\Adyen;
 use Omnipay\Adyen\Message\FetchPaymentMethodsRequest;
 use Omnipay\Adyen\Message\AuthorizeRequest;
 use Omnipay\Adyen\Message\CompleteAuthorizeRequest;
-use Omnipay\Adyen\Message\CseClientRequest;
+use Omnipay\Adyen\Message\Cse\ClientRequest;
 
 class CseGateway extends AbstractGateway
 {
@@ -26,49 +26,6 @@ class CseGateway extends AbstractGateway
     }
 
     public function encryptionClient(array $parameters = []) {
-        return $this->createRequest(CseClientRequest::class, $parameters);
-    }
-
-
-    // TODO below
-
-    public function purchase(array $parameters = array())
-    {
-        return $this->createRequest('\Omnipay\Dummy\Message\CreditCardRequest', $parameters);
-    }
-
-    public function capture(array $parameters = array())
-    {
-        return $this->createRequest('\Omnipay\Dummy\Message\TransactionReferenceRequest', $parameters);
-    }
-
-    public function completePurchase(array $parameters = array())
-    {
-        return $this->createRequest('\Omnipay\Dummy\Message\TransactionReferenceRequest', $parameters);
-    }
-
-    public function refund(array $parameters = array())
-    {
-        return $this->createRequest('\Omnipay\Dummy\Message\TransactionReferenceRequest', $parameters);
-    }
-
-    public function void(array $parameters = array())
-    {
-        return $this->createRequest('\Omnipay\Dummy\Message\TransactionReferenceRequest', $parameters);
-    }
-
-    public function createCard(array $parameters = array())
-    {
-        return $this->createRequest('\Omnipay\Dummy\Message\CreditCardRequest', $parameters);
-    }
-
-    public function updateCard(array $parameters = array())
-    {
-        return $this->createRequest('\Omnipay\Dummy\Message\CardReferenceRequest', $parameters);
-    }
-
-    public function deleteCard(array $parameters = array())
-    {
-        return $this->createRequest('\Omnipay\Dummy\Message\CardReferenceRequest', $parameters);
+        return $this->createRequest(ClientRequest::class, $parameters);
     }
 }
