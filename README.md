@@ -400,7 +400,7 @@ $gateway = Omnipay\Omnipay::create('Adyen\Api');
 $gateway->initialize([
     'testMode' => true,
     // For validating signatures (optional).
-    'secret' => $hmac,
+    'secret' => $notificationsHmac,
     // For validating Basic Auth (optional).
     'username' => $username,
     'password' => $password,
@@ -409,7 +409,11 @@ $gateway->initialize([
 $request = $gateway->acceptNotification();
 ```
 
-The `%request` will supply a wealth of information regarding the notification,
+Note that the notifications HMAC key is not the same as the HPP HMAX key.
+The HMAC check is optional, but if you supply the key here,
+then the driver will throw an exception if none is supplied by the API.
+
+The `$request` will supply a wealth of information regarding the notification,
 examples of which include:
 
 ```php
@@ -433,6 +437,13 @@ $request->getBillingAddress()
 
 // Indicates whether this is a live account (not testing).
 $request->getLive()
+
+// Test whether the HMAC validation is successful.
+$request->isValidHmac()
+
+// Throw an InvalidRequestException exception of the notification
+// has an invalid signature.
+$request->send()
 ```
 
 TODO: implementing the response to the gateway

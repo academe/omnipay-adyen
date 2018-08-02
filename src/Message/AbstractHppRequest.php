@@ -57,26 +57,5 @@ abstract class AbstractHppRequest extends AbstractRequest
         }, array_merge(array_keys($data), array_values($data))));
     }
 
-    /**
-     * Generate a signature for a data set
-     *
-     * @param array$data
-     *
-     * @return string
-     *
-     * @see https://docs.adyen.com/developers/hpp-manual#hpphmaccalculation
-     */
-    public function generateSignature(array $data)
-    {
-        // base64-encode the binary result of the HMAC computation.
-
-        return base64_encode(hash_hmac(
-            'sha256',
-            $this->getSigningString($data),
-            pack("H*", $this->getSecret()),
-            true
-        ));
-    }
-
     abstract public function getEndPoint($service = null);
 }

@@ -77,7 +77,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      * - scheduleAccountUpdater
      * Services for Payout group:
      * - storeDetail
-     * - storeDetailAndSubmitThirdParty   
+     * - storeDetailAndSubmitThirdParty
      * - submitThirdParty
      * - confirmThirdParty
      * - declineThirdParty
@@ -142,7 +142,8 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     /**
      * @return string
      */
-    public function getSessionValidity() {
+    public function getSessionValidity()
+    {
         return date('c', time() + (/*$this->getSessionLifetime()*/ 5 * 60));
     }
 
@@ -167,7 +168,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
             return $payload;
         }
 
-        // TODO: if comntent type if "utf8" then the body will contain a 
+        // TODO: if comntent type if "utf8" then the body will contain a
         // plain text error message that can be captured.
 
         throw new InvalidRequestException(sprintf(
@@ -175,6 +176,25 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
             $contentType,
             $response->getStatusCode(),
             $this->returnContentType
+        ));
+    }
+
+    /**
+     * Generate a signature for a signing string.
+     *
+     * @param string $$signingString
+     * @return string
+     * @see https://docs.adyen.com/developers/hpp-manual#hpphmaccalculation
+     */
+    public function generateSignature($signingString)
+    {
+        // base64-encode the binary result of the HMAC computation.
+
+        return base64_encode(hash_hmac(
+            'sha256',
+            $signingString,
+            pack("H*", $this->getSecret()),
+            true
         ));
     }
 }

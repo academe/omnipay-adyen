@@ -25,7 +25,8 @@ class CseGateway extends AbstractGateway
         return $this->createRequest(AuthorizeRequest::class, $parameters);
     }
 
-    public function encryptionClient(array $parameters = []) {
+    public function encryptionClient(array $parameters = [])
+    {
         return $this->createRequest(ClientRequest::class, $parameters);
     }
 }

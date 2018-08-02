@@ -93,9 +93,10 @@ class AuthorizeRequest extends AbstractHppRequest
             }
         }
 
-        // Finaly add the HMAC signature for the data.
+        // Finally add the HMAC signature for the data.
 
-        $data['merchantSig'] = $this->generateSignature($data);
+        $signingString = $this->getSigningString($data);
+        $data['merchantSig'] = $this->generateSignature($signingString);
 
         return $data;
     }

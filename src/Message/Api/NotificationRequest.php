@@ -10,17 +10,15 @@ namespace Omnipay\Adyen\Message\Api;
  * here).
  *
  * The "Adyen HttpClient 1.0" is supported at this time.
- *
- * TODO: the gateway is expecting a specific payment response, which
- * must be returned.
  */
 
 use Omnipay\Common\Exception\InvalidResponseException;
 use Omnipay\Common\Message\NotificationInterface;
-use Omnipay\Common\Message\AbstractRequest;
+use Omnipay\Adyen\Message\AbstractRequest;
 use Money\Money;
 use Money\Currency;
 use Omnipay\Adyen\Traits\GatewayParameters;
+use Omnipay\Common\Exception\InvalidRequestException;
 
 class NotificationRequest extends AbstractRequest implements NotificationInterface
 {
@@ -516,6 +514,21 @@ class NotificationRequest extends AbstractRequest implements NotificationInterfa
         );
     }
 
+    // TODO: some fraud checking fields:
+    // e.g. fraudCheck-21-EmailDomainValidation lots of fields
+    // with this general pattern (fraudCheck-N-NameOfCheck)
+    // totalFraudScore
+    //
+    // TODO: some security fields:
+    // threeDAuthenticated threeDOffered (both "true" or "false")
+    // threeDOfferedResponse ("Y" or "N", possibly other values)
+    // threeDAuthenticatedResponse
+    // avsResultRaw
+    //
+    // Lots more examples here:
+    // https://docs.adyen.com/developers/api-reference/payments-api/ \
+    // paymentresult/paymentresult-additionaldata
+
     /**
      *
      */
@@ -535,6 +548,8 @@ class NotificationRequest extends AbstractRequest implements NotificationInterfa
     /**
      * Construct the HMAC string for this notification server request.
      * A specific list of fields are included.
+     *
+     * @return string
      */
     public function getSigningString()
     {
@@ -556,24 +571,21 @@ class NotificationRequest extends AbstractRequest implements NotificationInterfa
     }
 
     /**
-     * Generate the HMAC signature from the relavent fields
-     * in the notification.
-     * Note: this is NOT working at present, and there are no examples
-     * of the signatures being used with PHP in any projects that I
-     * can find.
-     *
-     * @return string
+     * @return bool true if the HAMC signature is valid, or no secret was supplied
      */
-    public function generateSignature()
+    public function isValidHmac()
     {
-        // base64-encode the binary result of the HMAC computation.
+        if ($this->getSecret() === null) {
+            return true;
+        }
 
-        return base64_encode(hash_hmac(
-            'sha256',
-            $this->getSigningString(),
-            pack("H*", $this->getSecret()), // Equivalent to hex2bin()
-            true
-        ));
+        $signature = $this->generateSignature($this->getSigningString());
+
+        if ($signature === $this->getHmacSignature()) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -609,6 +621,8 @@ class NotificationRequest extends AbstractRequest implements NotificationInterfa
         }
 
         // Expand keys with dots '.' to arrays.
+        // This provides a deeper daat structure that is easier
+        // to walk and provides grouping of related data.
 
         $this->payload = $this->expandKeys($this->payload);
 
@@ -626,7 +640,7 @@ class NotificationRequest extends AbstractRequest implements NotificationInterfa
 
         $result = [];
 
-        foreach($arr as $key => $value) {
+        foreach ($arr as $key => $value) {
             if (is_array($value)) {
                 $value = $this->expandKeys($value);
             }
@@ -640,6 +654,7 @@ class NotificationRequest extends AbstractRequest implements NotificationInterfa
 
         return $result;
 
+        // My original attempt. Works, but less elegant.
 
         $result = [];
 
@@ -722,15 +737,24 @@ class NotificationRequest extends AbstractRequest implements NotificationInterfa
      */
     public function sendData($data)
     {
-        // $this->validateServerRequest(); // HMAC, merchantID, 
+        if (! $this->isValidSignature()) {
+            throw new InvalidRequestException(
+                'Notification HMAC signature does not match expected signature'
+            );
+        }
 
         return $this;
     }
 
     /**
      * Get a data item using "dot-notation".
+     *
+     * @param string $key key to the nested array value
+     * @param mixed $default the default value if no matching key found
+     * @param array $target an alternative structure to walk than the getData() source
+     * @return mixed the key vakue or the default value
      */
-    public function getDataItem($key, $default = null, $target = null)
+    public function getDataItem($key, $default = null, array $target = null)
     {
         if ($target === null) {
             $target = $this->getData();

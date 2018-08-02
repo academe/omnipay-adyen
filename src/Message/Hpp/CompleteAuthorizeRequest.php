@@ -12,7 +12,8 @@ use Omnipay\Common\Exception\InvalidRequestException;
 
 class CompleteAuthorizeRequest extends AbstractHppRequest
 {
-    public function getEndPoint($service = null) {
+    public function getEndPoint($service = null)
+    {
         return;
     }
 
@@ -51,7 +52,9 @@ class CompleteAuthorizeRequest extends AbstractHppRequest
         // Try generating the signature from what's left and we
         // should recover the same signature.
 
-        if ($this->generateSignature($data) !== $merchantSig) {
+        $signingString = $this->getSigningString($data);
+
+        if ($this->generateSignature($signingString) !== $merchantSig) {
             throw new InvalidRequestException(
                 'Incorrect signature; server request may have been tampered.'
             );

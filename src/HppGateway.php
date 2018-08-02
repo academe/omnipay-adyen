@@ -28,7 +28,8 @@ class HppGateway extends AbstractGateway
      *
      * @return \Omnipay\Adyen\Message\Hpp\FetchPaymentMethodsRequest
      */
-    public function fetchPaymentMethods(array $parameters = []) {
+    public function fetchPaymentMethods(array $parameters = [])
+    {
         return $this->createRequest(FetchPaymentMethodsRequest::class, $parameters);
     }
 
