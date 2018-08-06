@@ -1,22 +1,17 @@
 <?php
 
-namespace Omnipay\Adyen\Message;
+namespace Omnipay\Adyen\Message\Cse;
 
 /**
  * Authorize a payment.
- * FIXME: this isn't actually an authorise - it's just geneating the HPP form details.
  */
 
 use InvalidArgumentException;
+use Omnipay\Common\Exception\InvalidRequestException;
+use Omnipay\Adyen\Message\Api\AuthorizeRequest as ApiAuthorizeRequest;
 
-class AuthorizeRequest extends AbstractRequest
+class AuthorizeRequest extends ApiAuthorizeRequest
 {
-    /**
-     * @var string The path for the message.
-     */
-    // Both of these work.
-    //protected $endpointPath = 'servlet/Payment/authorise';
-    //protected $endpointPath = 'servlet/Payment/v30/authorise';
     protected $endpointService = 'authorise';
 
     /**
@@ -24,16 +19,14 @@ class AuthorizeRequest extends AbstractRequest
      */
     protected $encryptedDataName = 'adyen-encrypted-data';
 
-    protected $liveEndpoint = 'https://pal-live.adyen.com';
-    protected $testEndpoint = 'https://pal-test.adyen.com';
-
-    protected $liveRootPath = 'pal';
-    protected $testRootPath = 'pal';
-
-    public function getData()
+    /**
+     * Get the payment data for the additionalData array.
+     *
+     * @return array
+     * @throws InvalidRequestException
+     */
+    public function getPaymentMethodData()
     {
-        $this->validate('amount', 'currency', 'merchantAccount', 'transactionId');
-
         if ($this->getEncryptedData() === null) {
             throw new InvalidRequestException(sprintf(
                 'The encryptedData parameter or %s POST data is required',
@@ -41,31 +34,49 @@ class AuthorizeRequest extends AbstractRequest
             ));
         }
 
-        $data = [
-            'additionalData' => [
-                'card.encrypted.json' => $this->getEncryptedData(),
-            ],
-            'amount' => [
-                'value' => $this->getAmountInteger(),
-                'currency' => $this->getCurrency(),
-            ],
-            'reference' => $this->getTransactionId(),
-            'merchantAccount' => $this->getMerchantAccount(),
+        return [
+            'card.encrypted.json' => $this->getEncryptedData(),
         ];
-
-        return $data;
     }
 
-    public function createResponse($data)
+    /**
+     * @inherit
+     */
+    public function setCardToken($value)
     {
-        return new AuthorizeResponse($this, $data);
+        return $this->setEncryptedData($value);
     }
 
+    /**
+     * @inherit
+     */
+    public function getCardToken()
+    {
+        return $this->getEncryptedData();
+    }
+
+    /**
+     * Set the encryptedData value if the application sources
+     * it itself.
+     *
+     * @param string $value
+     * @return $this
+     */
     public function setEncryptedData($value)
     {
         return $this->setParameter('encryptedData', $value);
     }
 
+    /**
+     * Get the encryptedData paraemeter either from the value
+     * set by the application, or from the current request POST
+     * data.
+     * This would normally be used when the payment form is being
+     * submitted, but may not if the application handles the card
+     * and the additional payment details is separate forms.
+     *
+     * @return string|null
+     */
     public function getEncryptedData()
     {
         // If the application has supplied the encrypted data from its
@@ -79,6 +90,8 @@ class AuthorizeRequest extends AbstractRequest
 
         // Find it in the current POST data instead.
 
-        return ($this->httpRequest->request->get($this->encryptedDataName));
+        return ($this->httpRequest->request->get(
+            $this->encryptedDataName)
+        );
     }
 }

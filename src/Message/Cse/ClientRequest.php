@@ -1,6 +1,6 @@
 <?php
 
-namespace Omnipay\Adyen\Message;
+namespace Omnipay\Adyen\Message\Cse;
 
 /**
  * Client-side support for CSE (Client Side Encryption).
@@ -9,13 +9,12 @@ namespace Omnipay\Adyen\Message;
  * as an authorisation or payment.
  */
 
+use Omnipay\Adyen\Message\AbstractRequest;
 use InvalidArgumentException;
 
-class CseClientRequest extends AbstractRequest
+class ClientRequest extends AbstractRequest
 {
     /**
-     * This data is more for testing than any production use.
-     *
      * @inherit
      */
     public function getData()

@@ -25,6 +25,7 @@ Table of Contents
       * [Client Side Encryption (CSE)](#client-side-encryption-cse)
          * [Building a Form for Encryting](#building-a-form-for-encryting)
          * [An Encypted Card Authorises a Payment](#an-encypted-card-authorises-a-payment)
+      * [Notifications](#notifications)
       * [Support](#support)
 
 ## Installation
@@ -318,7 +319,7 @@ minimal example shows how this library can help build it.
 The *laravel blade* view format is used in the example.
 
 ```php
-$gateway = Omnipay\Omnipay::create('Adyen\Payment');
+$gateway = Omnipay\Omnipay::create('Adyen\Cse');
 
 $gateway->initialize([
     'testMode' => true,
@@ -328,7 +329,6 @@ $gateway->initialize([
 $request = $gateway->encryptionClient([
     'returnUrl' => 'https://example.com/payment-handler',
 ]);
-
 ```
 
 ```html
@@ -367,8 +367,8 @@ The `Pay` button will not be enabled until the credit card fields are completed 
 The JavaScript library included in the header will then encrypt the card details and
 add the result to the hidden `POST` field `adyen-encrypted-data` by default.
 You can specify an alternative field name through the options.
-This field must be accepted by the `https://example.com/payment-handler` page for the
-next step.
+This field must be accepted by the `https://example.com/payment-handler` page
+(defined as the `returnUrl`) for the next step.
 
 ### An Encypted Card Authorises a Payment
 

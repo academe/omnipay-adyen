@@ -9,8 +9,8 @@ namespace Omnipay\Adyen;
  */
 
 use Omnipay\Adyen\Message\FetchPaymentMethodsRequest;
-use Omnipay\Adyen\Message\AuthorizeRequest;
-use Omnipay\Adyen\Message\CompleteAuthorizeRequest;
+use Omnipay\Adyen\Message\Cse\AuthorizeRequest;
+use Omnipay\Adyen\Message\Cse\CompleteAuthorizeRequest;
 use Omnipay\Adyen\Message\Cse\ClientRequest;
 
 class CseGateway extends AbstractGateway
