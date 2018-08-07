@@ -519,6 +519,49 @@ class NotificationRequest extends AbstractRequest implements NotificationInterfa
         );
     }
 
+    /**
+     * The fraud score.
+     *
+     * @return string|int|null The string will contain an integer result.
+     */
+    public function getFraudScore()
+    {
+        return $this->getDataItem(
+            'additionalData.totalFraudScore',
+            $this->getDataItem($this->jsonPrefix . '.additionalData.totalFraudScore')
+        );
+    }
+
+    /**
+     * Return the fraud check results as an array in the same
+     * format as the API authorise response.
+     *
+     * @return array
+     */
+    public function getFraudResults()
+    {
+        $result = [];
+
+        foreach ($this->getAdditionalData() as $key => $accountScore) {
+            if (strpos($key, 'fraudCheck-') === 0) {
+                if (substr_count($key, '-') === 2) {
+                    list(, $checkId, $name) = explode('-', $key);
+                    $result[] = [
+                        'FraudCheckResult' => [
+                            'accountScore' => (int)$accountScore,
+                            'checkId' => $checkId,
+                            'name' => $name,
+                        ],
+                    ];
+                }
+            }
+        }
+
+        //fraudCheck
+
+        return $result;
+    }
+
     // TODO: some fraud checking fields:
     // e.g. fraudCheck-21-EmailDomainValidation lots of fields
     // with this general pattern (fraudCheck-N-NameOfCheck)
