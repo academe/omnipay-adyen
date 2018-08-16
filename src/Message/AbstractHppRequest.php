@@ -57,5 +57,18 @@ abstract class AbstractHppRequest extends AbstractRequest
         }, array_merge(array_keys($data), array_values($data))));
     }
 
+    /**
+     * @return string|null
+     */
+    public function getCustomerId()
+    {
+        return $this->getParameter('customerId');
+    }
+
+    public function setCustomerId($value)
+    {
+        return $this->setParameter('customerId', $value);
+    }
+
     abstract public function getEndPoint($service = null);
 }

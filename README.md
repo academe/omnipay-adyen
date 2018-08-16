@@ -23,8 +23,8 @@ Table of Contents
             * [Complete Transaction on Return](#complete-transaction-on-return)
          * [Capture the Authorisation](#capture-the-authorisation)
       * [Client Side Encryption (CSE)](#client-side-encryption-cse)
-         * [Building a Form for Encryting](#building-a-form-for-encryting)
-         * [An Encypted Card Authorises a Payment](#an-encypted-card-authorises-a-payment)
+         * [Building a Form for Encrypting](#building-a-form-for-encrypting)
+         * [An Encrypted Card Authorises a Payment](#an-encrypted-card-authorises-a-payment)
       * [Notifications](#notifications)
       * [Support](#support)
 
@@ -66,8 +66,8 @@ $gateway->initialize([
     'skinCode' => $skinCode,
     'merchantAccount' => $merchantAccount,
     'testMode' => true,
-    // Optional; default set in account:
     'currency' => 'EUR',
+    // Optional; default set in account:
     'countryCode' => 'GB',
 ]);
 
@@ -312,7 +312,7 @@ your site, along with any additional details.
 The encrpyted details are then used in place of credit card details when making
 an autorisation request to the API, server-to-server.
 
-### Building a Form for Encryting
+### Building a Form for Encrypting
 
 The client-side fuctionality can be completely built by hand, but the following
 minimal example shows how this library can help build it.
@@ -370,7 +370,7 @@ You can specify an alternative field name through the options.
 This field must be accepted by the `https://example.com/payment-handler` page
 (defined as the `returnUrl`) for the next step.
 
-### An Encypted Card Authorises a Payment
+### An Encrypted Card Authorises a Payment
 
 This is the server-side handling.
 

@@ -34,6 +34,18 @@ class FetchPaymentMethodsResponse extends AbstractResponse
                     if (array_key_exists('brandCode', $method) && array_key_exists('name', $method)) {
                         $array[$method['brandCode']] = $method;
                     }
+
+                    // If there are issuers then give them the associative key treatment too.
+
+                    if (array_key_exists('issuers', $method) && is_array($method['issuers'])) {
+                        $issuers = [];
+
+                        foreach ($method['issuers'] as $issuer) {
+                            $issuers[$issuer['issuerId']] = $issuer;
+                        }
+
+                        $method['issuers'] = $issuers;
+                    }
                 }
 
                 return $array;

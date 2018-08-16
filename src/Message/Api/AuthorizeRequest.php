@@ -57,7 +57,7 @@ class AuthorizeRequest extends AbstractApiRequest
                 'stateOrProvince' => $card->getBillingState(),
             ];
 
-            // TODO: only include if the mandatory fields are set.
+            // TODO: only include if the above mandatory fields are set.
 
             $additionalData['billingAddress'] = $billingAddress;
         }

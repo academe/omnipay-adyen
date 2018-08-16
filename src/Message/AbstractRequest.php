@@ -19,8 +19,8 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     protected $liveEndpointCse = 'https://live.adyen.com/hpp/cse/js/{token}.shtml';
 
     // Directory services
-    protected $testEndpointDirectory = 'https://test.adyen.com/hpp/directory/v2.shtml';
-    protected $liveEndpointDirectory = 'https://live.adyen.com/hpp/directory/v2.shtml';
+    protected $testEndpointDirectory = 'https://test.adyen.com/hpp/directory/{version}.shtml';
+    protected $liveEndpointDirectory = 'https://live.adyen.com/hpp/directory/{version}.shtml';
 
     // Terminal services
     protected $testEndpointTerminal = 'https://terminal-api-test.adyen.com';
@@ -34,8 +34,10 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     protected $testEndpointCheckoutServices = 'https://checkout-test.adyen.com/v32/{service}';
     protected $liveEndpointCheckoutServices = 'https://checkout-live.adyen.com/v32/{service}';
 
+    const VERSION_DIRECTORY = 'v2';
     const VERSION_CHECKOUT = 'v32';
     const VERSION_CHECKOUT_UTILITY = 'v1';
+    const VERSION_PAYMENTS = 'v30';
 
     protected $returnContentType = 'application/json';
 
@@ -85,7 +87,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      * @param string the service name
      * @return string the appropriate test/live URL
      */
-    public function getPaymentUrl($service, $group = 'Payment', $version = 'v30')
+    public function getPaymentUrl($service, $group = 'Payment', $version = self::VERSION_PAYMENTS)
     {
         $template = $this->getTestMode()
             ? $this->testEndpointPal
@@ -128,15 +130,17 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     }
 
     /**
-     * The Diectory URL has no parameters.
+     * The Directory URL has no parameters.
      */
-    public function getDirectoryUrl()
+    public function getDirectoryUrl($version = self::VERSION_DIRECTORY)
     {
         $template = $this->getTestMode()
             ? $this->testEndpointDirectory
             : $this->liveEndpointDirectory;
 
-        return $template;
+        return $this->expandUrlTemplate($template, [
+            'version' => $version,
+        ]);
     }
 
     /**

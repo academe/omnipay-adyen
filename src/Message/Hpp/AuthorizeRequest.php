@@ -66,16 +66,17 @@ class AuthorizeRequest extends AbstractHppRequest
 
         $data['billingAddressType'] = $billingAddressType;
 
-// TODO:
-// merchantReturnData countryCode allowedMethods blockedMethods
-// metadata (key and value list)
-// offset (int)
-// orderData (html)
-// shipBeforeDate (listed as mandatory, but seems to be optional)
-// shopperLocale (uses underscore separator)
-// shopperReference (e.g. customer id)
-// shopperStatement (multiline, supports sme placeholders)
-// Can we prefillt he address?
+        // TODO:
+        // merchantReturnData countryCode allowedMethods blockedMethods
+        // metadata (key and value list)
+        // offset (int)
+        // orderData (html)
+        // shipBeforeDate (listed as mandatory, but seems to be optional)
+        // shopperStatement (multiline, supports sme placeholders)
+
+        if ($customerId = $this->getCustomerId()) {
+            $data['shopperReference'] = $customerId;
+        }
 
         if ($returnUrl = $this->getReturnUrl()) {
             $data['resURL'] = $returnUrl;
@@ -84,6 +85,8 @@ class AuthorizeRequest extends AbstractHppRequest
         if ($shopperLocale = $this->getShopperLocale()) {
             $data['shopperLocale'] = $shopperLocale;
         }
+
+        // A single card brand with an optional issuer can be specified.
 
         if ($brandCode = $this->getBrandCode()) {
             $data['brandCode'] = $brandCode;

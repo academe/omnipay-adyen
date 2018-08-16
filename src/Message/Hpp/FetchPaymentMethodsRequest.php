@@ -40,7 +40,8 @@ class FetchPaymentMethodsRequest extends AbstractHppRequest
 
         // Finally add the HMAC signature for the data.
 
-        $data['merchantSig'] = $this->generateSignature($data);
+        $signingString = $this->getSigningString($data);
+        $data['merchantSig'] = $this->generateSignature($signingString);
 
         return $data;
     }
