@@ -162,10 +162,12 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         // e.g. "application/json;charset=UTF-8" so we need to split
         // that to check the correct return type.
 
-        list($contentType) = explode(';', $contentType);
+        list($contentType) = explode(';', $contentType, 2);
+
+        $body = (string)$response->getBody();
 
         if ($contentType === $this->returnContentType) {
-            $payload = json_decode((string)$response->getBody(), true);
+            $payload = json_decode($body, true);
 
             // TODO: check for JSON errors after parsing.
 
@@ -173,7 +175,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         }
 
         // TODO: if comntent type if "utf8" then the body will contain a
-        // plain text error message that can be captured.
+        // text/plain error message that can be captured.
 
         throw new InvalidRequestException(sprintf(
             'Unexpected content type "%s" and code "%s"; expecting "%s"',

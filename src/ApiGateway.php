@@ -6,6 +6,7 @@ namespace Omnipay\Adyen;
  * Adyen API (direct API) Gateway.
  */
 
+use Omnipay\Adyen\Message\Api\AuthorizeRequest;
 use Omnipay\Adyen\Message\Api\CancelRequest;
 use Omnipay\Adyen\Message\Api\CaptureRequest;
 use Omnipay\Adyen\Message\Api\RefundRequest;
@@ -16,6 +17,16 @@ class ApiGateway extends AbstractGateway
     public function getName()
     {
         return 'Adyen API';
+    }
+
+    /**
+     * @param array $parameters
+     *
+     * @return \Omnipay\Adyen\Message\Api\AuthorizeRequest
+     */
+    public function authorize(array $parameters = array())
+    {
+        return $this->createRequest(AuthorizeRequest::class, $parameters);
     }
 
     /**

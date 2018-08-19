@@ -7,20 +7,96 @@ use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RedirectResponseInterface;
 use Omnipay\Adyen\Traits\DataWalker;
 
-class AuthorizeResponse extends AbstractResponse
+class AuthorizeResponse extends AbstractResponse implements RedirectResponseInterface
 {
     use DataWalker;
+
+    /**
+     * @var valus for the resultCode.
+     */
+    const RESULT_CODE_AUTHORISED        = "Authorised";
+    const RESULT_CODE_REFUSED           = "Refused";
+    const RESULT_CODE_ERROR             = "Error";
+    const RESULT_CODE_CANCELLED         = "Cancelled";
+    const RESULT_CODE_RECEIVED          = "Received";
+    const RESULT_CODE_REDIRECTSHOPPER   = "RedirectShopper";
+
+    const SECURE_3D_SMS_VERIFICATION = 'CUPSecurePlus-CollectSMSVerificationCode';
 
     protected $payload;
 
     public function isSuccessful()
     {
-        // TODO
+        return $this->getResultCode() === static::RESULT_CODE_AUTHORISED
+            && ! $this->getMessage();
+    }
+
+    public function isCancelled()
+    {
+        return $this->getResultCode() === static::RESULT_CODE_CANCELLED;
+    }
+
+    /**
+     * May involve a redirect for 3D Secure.
+     */
+    public function isRedirect()
+    {
+        return $this->getResultCode() === static::RESULT_CODE_REDIRECTSHOPPER;
+    }
+
+    /**
+     * May involve a redirect for 3D Secure.
+     */
+    public function getRedirectUrl()
+    {
+        return $this->getDataItem('issuerUrl');
+    }
+
+    /**
+     * Payment session for 3D Secure.
+     */
+    public function getMd()
+    {
+        return $this->getDataItem('md');
+    }
+
+    /**
+     * For 3D Secure.
+     * If static::SECURE_3D_SMS_VERIFICATION then the end user
+     * will suply an SMS code to be submitted.
+     */
+    public function getPaRequest()
+    {
+        return $this->getDataItem('paRequest');
+    }
+
+    /**
+     * For 3D Secure.
+     */
+    public function getRedirectMethod()
+    {
+        return 'POST';
+    }
+
+    /**
+     * For 3D Secure.
+     */
+    public function getRedirectData()
+    {
+        if ($this->isRedirect()) {
+            return [
+                'PaReq' => $this->getPaRequest(),
+                'MD' => $this->getMd(),
+                'TermUrl' => $this->request->getReturnUrl(),
+            ];
+        }
+
+        return [];
     }
 
     /**
      * The first time we get data, expand any dot-notation keys to
-     * ested arrays, then cache the result for subsequent access.
+     * nested arrays, then cache the result for subsequent access.
      */
     public function getData()
     {
@@ -70,6 +146,22 @@ class AuthorizeResponse extends AbstractResponse
     public function getResultCode()
     {
         return $this->getDataItem('resultCode');
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCode()
+    {
+        return $this->getResultCode();
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getMessage()
+    {
+        return $this->getDataItem('refusalReason');
     }
 
     /**

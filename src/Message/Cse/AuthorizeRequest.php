@@ -21,6 +21,7 @@ class AuthorizeRequest extends ApiAuthorizeRequest
 
     /**
      * Get the payment data for the additionalData array.
+     * This will be the CC data encrypted on the browser client.
      *
      * @return array
      * @throws InvalidRequestException

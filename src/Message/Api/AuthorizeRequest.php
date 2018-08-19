@@ -62,6 +62,8 @@ class AuthorizeRequest extends AbstractApiRequest
             $additionalData['billingAddress'] = $billingAddress;
         }
 
+        $additionalData['executeThreeD'] = ((bool)$this->get3DSecure() ? 'true' : 'false');
+
         $amount = [
             'value' => $this->getAmountInteger(),
             'currency' => $this->getCurrency(),
@@ -79,13 +81,61 @@ class AuthorizeRequest extends AbstractApiRequest
 
     /**
      * Get the payment data for the additionalData array.
+     * In this case it is the CC details posted to the merchant site.
+     * Be aware of PCI regulations when doing this.
      *
      * @return array
      * @throws InvalidRequestException
      */
     public function getPaymentMethodData()
     {
-        // TODO: data from creditCard or bankAccount
+        $cardData = $this->getCardData();
+
+        if (! empty($cardData)) {
+            return ['card' => $cardData];
+        }
+
+        $bankData = $this->getBankData();
+
+        if (! empty($bankData)) {
+            return ['bankAccount' => $bankData];
+        }
+
+        return [];
+    }
+
+    /**
+     * If a credit card is supplied, then return the credit card
+     * data, otherwise an empty array.
+     *
+     * @return array
+     */
+    public function getCardData()
+    {
+        $data = [];
+
+        $card = $this->getCard();
+
+        if ($card) {
+            if ($card->getNumber()) {
+                // TODO: validate required fields.
+                $card->validate();
+
+                $data['number'] = $card->getNumber();
+                $data['expiryYear'] = $card->getExpiryDate('Y');
+                $data['expiryMonth'] = $card->getExpiryDate('m');
+                $data['holderName'] = $card->getName();
+
+                // Optional: cvc issueNumber startMonth startYear
+            }
+        }
+
+        return $data;
+    }
+
+    // TODO
+    public function getBankData()
+    {
         return [];
     }
 }

@@ -327,7 +327,7 @@ $gateway->initialize([
 ]);
 
 $request = $gateway->encryptionClient([
-    'returnUrl' => 'https://example.com/payment-handler',
+    'returnUrl' => 'https://merchant-site.example.com/payment-handler',
 ]);
 ```
 
@@ -362,6 +362,10 @@ $request = $gateway->encryptionClient([
 </html>
 ```
 
+Other application-specific fields can be added to the form as needed.
+You may also operate this form using AJAX to prevent a full page refresh.
+The Adyen CSE documentation provides more details on this.
+
 The `Pay` button will not be enabled until the credit card fields are completed and valid.
 
 The JavaScript library included in the header will then encrypt the card details and
@@ -373,8 +377,50 @@ This field must be accepted by the `https://example.com/payment-handler` page
 ### An Encrypted Card Authorises a Payment
 
 This is the server-side handling.
+Once the CSE form has been POSTed to your clienty site,
+the encrypted card details will be available.
+It can be used to submit an authorisation like this:
 
-TODO...
+```php
+$gateway = Omnipay\Omnipay::create('Adyen\Cse');
+
+$gateway->initialize([
+    'merchantAccount' => $merchantAccount,
+    'testMode' => true,
+    'currency' => 'EUR',
+    'countryCode' => 'DE',
+    'username' => $username,
+    'password' => $password,
+]);
+
+$request = $gateway->authorize([
+    'amount' => 11.99,
+    'transactionId' => $transactionId,
+    // The credit card object provides additional billing and
+    // shipping details only.
+    'card' => $creditCard,
+    // You can pass in the encrypted card as the cardToken,
+    // or leave the authorize request to extract it from current
+    // POST data.
+    'cardToken' => $_POST['encryptedData'],
+    // If you want to use 3D Secure, then set the 3D Secure flag
+    // and the URL to return the user to.
+    '3DSecure' => true,
+    'returnUrl' => 'https://example.com/complete-3d-secure-handler',
+]);
+
+// The response will provide the success status, transaction
+// reference, fraud details, limited card details, etc.
+$response = $request->send();
+
+if ($response->isSuccessful()) {
+    echo $response->getTransactionReference();
+} elseif ($response->isRedirect()) {
+    $response->redirect();
+}
+```
+
+TODO: 3D Secure completion with completeAuthorize (for API and CSE)
 
 ## Notifications
 

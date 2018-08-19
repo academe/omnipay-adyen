@@ -107,4 +107,17 @@ trait GatewayParameters
     {
         return $this->setParameter('password', $value);
     }
+
+    /**
+     * @return string|null Any value that will be cast to bool in use.
+     */
+    public function get3DSecure()
+    {
+        return $this->getParameter('3DSecure');
+    }
+
+    public function set3DSecure($value)
+    {
+        return $this->setParameter('3DSecure', $value);
+    }
 }

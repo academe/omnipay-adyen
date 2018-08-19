@@ -12,9 +12,14 @@ namespace Omnipay\Adyen\Message\Cse;
 use Omnipay\Adyen\Message\AbstractRequest;
 use InvalidArgumentException;
 
-class ClientRequest extends AbstractRequest
+class EncryptionClientRequest extends AbstractRequest
 {
     /**
+     * Use this data to generate the front-end card encryption form.
+     * See the documention for details on how to construct the form.
+     * The form will submit to the merchant site with the encrypted
+     * card data, where a back-end authorisation can then be performed.
+     *
      * @inherit
      */
     public function getData()
@@ -31,8 +36,8 @@ class ClientRequest extends AbstractRequest
     }
 
     /**
-     * Return the URL to the JavaScript library used for
-     * encrypting the CC details.
+     * The URL to the JavaScript library used for encrypting the CC details.
+     * It will be unique for every site due to the public token it contains.
      *
      * @return string URL
      */
@@ -44,11 +49,13 @@ class ClientRequest extends AbstractRequest
     }
 
     /**
-     * Should the get change state? Probably not.
-     * Maybe set on instantiation. However, that binds this
-     * message probably a little too close to the AbstractRequest.
+     * The timestamp the payment form was generated.
+     * This will be incorporated into the encrypted CC details, which defines
+     * the start of its lifetime. The encrypted CC detail will then need to be
+     * used within a limited time.
+     * Example: 2017-07-17T13:42:40.428+01:00
      *
-     * @return string curret datetime.
+     * @return string current datetime; ISO 8601; YYYY-MM-DDThh:mm:ss.sssTZD
      */
     public function getGenerationtime()
     {
