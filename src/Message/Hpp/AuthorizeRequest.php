@@ -67,7 +67,7 @@ class AuthorizeRequest extends AbstractHppRequest
         $data['billingAddressType'] = $billingAddressType;
 
         // TODO:
-        // merchantReturnData countryCode blockedMethods
+        // merchantReturnData countryCode
         // metadata (key and value list)
         // offset (int)
         // orderData (html)
@@ -86,13 +86,13 @@ class AuthorizeRequest extends AbstractHppRequest
             $data['shopperLocale'] = $shopperLocale;
         }
 
-        if ($brandCode = $this->getBrandCode()) {
+        if ($brandCode = $this->getPaymentMethod()) {
             // A single card brand with an optional issuer can be specified.
             // This uses the "skipDetails" entrypoint in the redirect response.
 
             $data['brandCode'] = $brandCode;
 
-            if ($issuerId = $this->getIssuerId()) {
+            if ($issuerId = $this->getIssuer()) {
                 $data['issuerId'] = $issuerId;
             }
         } else {
@@ -124,32 +124,6 @@ class AuthorizeRequest extends AbstractHppRequest
         // The response is a redirect.
 
         return new AuthorizeResponse($this, $data);
-    }
-
-    /**
-     * brandCode - the single payment method to use.
-     */
-    public function getBrandCode()
-    {
-        return $this->getParameter('brancdCode');
-    }
-
-    public function setBrandCode($value)
-    {
-        return $this->setParameter('brancdCode', $value);
-    }
-
-    /**
-     * issuerId - optional issuer when using a single payment method.
-     */
-    public function getIssuerId()
-    {
-        return $this->getParameter('issuerId');
-    }
-
-    public function setIssuerId($value)
-    {
-        return $this->setParameter('issuerId', $value);
     }
 
     /**

@@ -77,17 +77,41 @@ $request = $gateway->fetchPaymentMethods([
 ]);
 
 $response = $request->send();
-
-// Options for $index:
-// `false` (default) - the results will be indexed numerically
-// `true` - the results will be indexed by `brandeCode`
-
-$response->getPaymentMethods($index)
 ```
 
-This gives you an array of this this form:
+This gives you an array of `PaymentMethod` objects:
 
 ```php
+$response->getPaymentMethods();
+
+/*
+array(7) {
+  [0]=>
+  object(Omnipay\Common\PaymentMethod)#48 (2) {
+    ["id":protected]=>
+    string(6) "diners"
+    ["name":protected]=>
+    string(11) "Diners Club"
+  }
+  [1]=>
+  object(Omnipay\Common\PaymentMethod)#39 (2) {
+    ["id":protected]=>
+    string(8) "discover"
+    ["name":protected]=>
+    string(8) "Discover"
+  }
+  ...
+}
+*/
+```
+
+The raw payment methods, as associatively indexed arrays, can be fetched too.
+These include logos in a variety of sizes.
+
+```php
+$response->getPaymentMethodsAssoc();
+
+/*
 array(7) {
   ["diners"]=>
   array(3) {
@@ -107,6 +131,7 @@ array(7) {
   }
   ...
 }
+*/
 ```
 
 Some payment methods will also have a list of `issuers` that may also be
@@ -182,19 +207,26 @@ $request = $gateway->authorize([
 
 Now there are a few additional parameters that need some explanation.
 
-The `brandCode` can be used to redirect the user to a specific payment method:
+The `paymentMethod` can be used to redirect the user to a specific payment method,
+without asking the user to choose from the available payment methods:
 
-    $request->setBrandCode('visa');
-    $request->setIssuerId('optional issuer ID for the brandCode');
+    $request->setPaymentMethod('visa');
+    $request->setIssuer('optional issuer ID for the brandCode');
 
-Specifying the `brandCode` will skip any pages asking the user how they
+Specifying the `paymentMethod` will skip any pages asking the user how they
 want to pay, and take the user direct to that payment method.
+
+An alternative way to limit the payment methods that are offered to the user,
+is to use the `allowedMethods` and `blockedMethods` lists.
+
+    $request->setAllowedMethod(['visa', 'diner']); // Only Visa and Diner cards.
+    $request->setBlockesMethod(['visa']); // All types except Visa.
 
 Setting `addressHidden` to `true` will hide the address being submitted to
 the payment gateway.
 The user will not see their address, but what you submit will be stored at
 the gateway.
-By defauit it is shown.
+By defauit, the address is shown to the user.
 
     $request->setAddressHidden(true);
 
@@ -205,7 +237,7 @@ signed, so any attempt by the user to change them will result in a rejection.
 
     $request->setAddressLocked(true);
 
-Additional parameters will be available in time.
+Additional parameters will be supported in the future.
 
 Now "send" the request to get the redirection response.
 
