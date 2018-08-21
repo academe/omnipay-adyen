@@ -38,6 +38,10 @@ class FetchPaymentMethodsRequest extends AbstractHppRequest
             $data['countryCode'] = $this->getCountryCode();
         }
 
+        if ($this->getAllowedMethods() !== null) {
+            $data['allowedMethods'] = $this->getAllowedMethods();
+        }
+
         // Finally add the HMAC signature for the data.
 
         $signingString = $this->getSigningString($data);

@@ -120,4 +120,40 @@ trait GatewayParameters
     {
         return $this->setParameter('3DSecure', $value);
     }
+
+    /**
+     * @return string|null A comma-separated list of allowed payment methods.
+     */
+    public function getAllowedMethods()
+    {
+        return $this->getParameter('allowedMethods');
+    }
+
+    public function setAllowedMethods($value)
+    {
+        // If an array is passed in, then compact it to a string.
+
+        if (is_array($value)) {
+            $value = implode(',', array_unique($value));
+        }
+
+        return $this->setParameter('allowedMethods', $value);
+    }
+
+    /**
+     * Add a single allowed method.
+     */
+    public function setAllowedMethod($value)
+    {
+        $methods = $this->getAllowedMethods();
+
+        if ($methods === null || $methods === '') {
+            $methods = $value;
+        } else {
+            $methods = explode(',', $methods);
+            $methods[] = $value;
+        }
+
+        return $this->setAllowedMethods($methods);
+    }
 }

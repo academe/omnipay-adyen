@@ -9,14 +9,26 @@ namespace Omnipay\Adyen\Message\Hpp;
 use Omnipay\Common\Message\ResponseInterface;
 use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\FetchPaymentMethodsResponseInterface;
+use Omnipay\Common\Message\FetchIssuersResponseInterface;
 use Omnipay\Common\PaymentMethod;
+use Omnipay\Common\Issuer;
 
-class FetchPaymentMethodsResponse extends AbstractResponse implements FetchPaymentMethodsResponseInterface
+class FetchPaymentMethodsResponse
+    extends AbstractResponse
+    implements FetchPaymentMethodsResponseInterface, FetchIssuersResponseInterface
 {
     /**
      * @var array
      */
     protected $paymentMethods = [];
+
+    /**
+     * @inherit
+     */
+    public function isSuccessful()
+    {
+        return !empty($this->paymentMethods);
+    }
 
     /**
      * @return PaymentMethod[]
@@ -35,8 +47,7 @@ class FetchPaymentMethodsResponse extends AbstractResponse implements FetchPayme
     /**
      * Return the raw payment methods.
      *
-     * @param bool $associative Return payment methods as an associative array if set.
-     * @return array List of brandCode/name
+     * @return array List of brandCodes/names/issuers as supplied by the API
      */
     public function getPaymentMethodsRaw()
     {
@@ -76,10 +87,28 @@ class FetchPaymentMethodsResponse extends AbstractResponse implements FetchPayme
     }
 
     /**
-     * @inherit
+     * If an issuer is listed under more than one payment method, then
+     * it will appear more than once in the list.
+     * However, the list can be restricted using allowedMethods
+     *
+     * @return Issuer[]
      */
-    public function isSuccessful()
+    public function getIssuers()
     {
-        return !empty($this->paymentMethods);
+        $result = [];
+
+        foreach ($this->getPaymentMethodsAssoc() as $paymentMethod) {
+            if (! empty($paymentMethod['issuers'])) {
+                foreach ($paymentMethod['issuers'] as $issuer) {
+                    $result[] = new Issuer(
+                        $issuer['issuerId'],
+                        $issuer['name'],
+                        $paymentMethod['brandCode']
+                    );
+                }
+            }
+        }
+
+        return $result;
     }
 }
