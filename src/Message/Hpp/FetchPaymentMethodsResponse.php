@@ -8,8 +8,10 @@ namespace Omnipay\Adyen\Message\Hpp;
 
 use Omnipay\Common\Message\ResponseInterface;
 use Omnipay\Common\Message\AbstractResponse;
+use Omnipay\Common\Message\FetchPaymentMethodsResponseInterface;
+use Omnipay\Common\PaymentMethod;
 
-class FetchPaymentMethodsResponse extends AbstractResponse
+class FetchPaymentMethodsResponse extends AbstractResponse implements FetchPaymentMethodsResponseInterface
 {
     /**
      * @var array
@@ -17,44 +19,60 @@ class FetchPaymentMethodsResponse extends AbstractResponse
     protected $paymentMethods = [];
 
     /**
+     * @return PaymentMethod[]
+     */
+    public function getPaymentMethods()
+    {
+        $result = [];
+
+        foreach ($this->getPaymentMethodsAssoc() as $method) {
+            $result[] = new PaymentMethod($method['brandCode'], $method['name']);
+        }
+
+        return $result;
+    }
+
+    /**
      * Return the raw payment methods.
      *
      * @param bool $associative Return payment methods as an associative array if set.
-     * @return array Array of brandCode/name pairs, or an associative array.
+     * @return array List of brandCode/name
      */
-    public function getPaymentMethods($associative = false)
+    public function getPaymentMethodsRaw()
     {
         if (isset($this->data['paymentMethods'])) {
-            $data = $this->data['paymentMethods'];
+            return $this->data['paymentMethods'];
+        } else {
+            return [];
+        }
+    }
 
-            if ($associative) {
-                $array = [];
+    /**
+     * @return array Associative array of brands.
+     */
+    public function getPaymentMethodsAssoc()
+    {
+        $result = [];
 
-                foreach ($data as $method) {
-                    if (array_key_exists('brandCode', $method) && array_key_exists('name', $method)) {
-                        $array[$method['brandCode']] = $method;
-                    }
+        foreach ($this->getPaymentMethodsRaw() as $method) {
+            if (array_key_exists('brandCode', $method) && array_key_exists('name', $method)) {
+                $result[$method['brandCode']] = $method;
+            }
 
-                    // If there are issuers then give them the associative key treatment too.
+            // If there are issuers then give them the associative key treatment too.
 
-                    if (array_key_exists('issuers', $method) && is_array($method['issuers'])) {
-                        $issuers = [];
+            if (array_key_exists('issuers', $method) && is_array($method['issuers'])) {
+                $issuers = [];
 
-                        foreach ($method['issuers'] as $issuer) {
-                            $issuers[$issuer['issuerId']] = $issuer;
-                        }
-
-                        $method['issuers'] = $issuers;
-                    }
+                foreach ($method['issuers'] as $issuer) {
+                    $issuers[$issuer['issuerId']] = $issuer;
                 }
 
-                return $array;
+                $method['issuers'] = $issuers;
             }
-        } else {
-            $data = [];
         }
 
-        return $data;
+        return $result;
     }
 
     /**
