@@ -42,6 +42,10 @@ class FetchPaymentMethodsRequest extends AbstractHppRequest
             $data['allowedMethods'] = $this->getAllowedMethods();
         }
 
+        if ($this->getBlockedMethods() !== null) {
+            $data['blockedMethods'] = $this->getBlockedMethods();
+        }
+
         // Finally add the HMAC signature for the data.
 
         $signingString = $this->getSigningString($data);

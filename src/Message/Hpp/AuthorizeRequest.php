@@ -67,7 +67,7 @@ class AuthorizeRequest extends AbstractHppRequest
         $data['billingAddressType'] = $billingAddressType;
 
         // TODO:
-        // merchantReturnData countryCode allowedMethods blockedMethods
+        // merchantReturnData countryCode blockedMethods
         // metadata (key and value list)
         // offset (int)
         // orderData (html)
@@ -86,13 +86,25 @@ class AuthorizeRequest extends AbstractHppRequest
             $data['shopperLocale'] = $shopperLocale;
         }
 
-        // A single card brand with an optional issuer can be specified.
-
         if ($brandCode = $this->getBrandCode()) {
+            // A single card brand with an optional issuer can be specified.
+            // This uses the "skipDetails" entrypoint in the redirect response.
+
             $data['brandCode'] = $brandCode;
 
             if ($issuerId = $this->getIssuerId()) {
                 $data['issuerId'] = $issuerId;
+            }
+        } else {
+            // The brands presented are filterewd by the "allowed" or 'blocked"
+            // lists (or both, which makes little sense, but is allowed).
+
+            if ($this->getAllowedMethods() !== null) {
+                $data['allowedMethods'] = $this->getAllowedMethods();
+            }
+
+            if ($this->getBlockedMethods() !== null) {
+                $data['blockedMethods'] = $this->getBlockedMethods();
             }
         }
 

@@ -156,4 +156,40 @@ trait GatewayParameters
 
         return $this->setAllowedMethods($methods);
     }
+
+    /**
+     * @return string|null A comma-separated list of blocked payment methods.
+     */
+    public function getBlockedMethods()
+    {
+        return $this->getParameter('blockedMethods');
+    }
+
+    public function setBlockedMethods($value)
+    {
+        // If an array is passed in, then compact it to a string.
+
+        if (is_array($value)) {
+            $value = implode(',', array_unique($value));
+        }
+
+        return $this->setParameter('blockedMethods', $value);
+    }
+
+    /**
+     * Add a single blocked method.
+     */
+    public function setBlockedMethod($value)
+    {
+        $methods = $this->getBlockedMethods();
+
+        if ($methods === null || $methods === '') {
+            $methods = $value;
+        } else {
+            $methods = explode(',', $methods);
+            $methods[] = $value;
+        }
+
+        return $this->setBlockedMethods($methods);
+    }
 }

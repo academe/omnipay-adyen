@@ -18,7 +18,7 @@ class AuthorizeResponse extends AbstractResponse implements RedirectResponseInte
         if ($brandCode = $this->getBrandCode()) {
             return 'https://test.adyen.com/hpp/skipDetails.shtml';
         } else {
-            return 'https://test.adyen.com/hpp/pay.shtml'; // TODO: try also select.shtml
+            return 'https://test.adyen.com/hpp/pay.shtml';
         }
     }
 
