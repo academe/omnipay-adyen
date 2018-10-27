@@ -25,6 +25,7 @@ Table of Contents
       * [Client Side Encryption (CSE)](#client-side-encryption-cse)
          * [Building a Form for Encrypting](#building-a-form-for-encrypting)
          * [An Encrypted Card Authorises a Payment](#an-encrypted-card-authorises-a-payment)
+         * [3D Secure Response](#3d-secure-response)
       * [Notifications](#notifications)
       * [Support](#support)
 
@@ -478,7 +479,7 @@ $response = $request->send();
 ```
 
 The `$response` will be the final response, as you would get without
-the additional step of 3D Secure if it was not enabled.
+the additional 3D Secure step if it was not enabled or available.
 
 ## Notifications
 
