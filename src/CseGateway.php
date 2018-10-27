@@ -35,4 +35,12 @@ class CseGateway extends AbstractGateway
     {
         return $this->createRequest(AuthorizeRequest::class, $parameters);
     }
+
+    /**
+     * Complete an authorization after return from 3D-Secure.
+     */
+    public function completeAuthorize(array $parameters = array())
+    {
+        return $this->createRequest(CompleteAuthorizeRequest::class, $parameters);
+    }
 }
