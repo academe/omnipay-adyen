@@ -333,6 +333,7 @@ class NotificationRequest extends AbstractRequest implements NotificationInterfa
 
         if (is_string($operations)) {
             // JSON will be an array, and Form POST will be a CSV string.
+
             $operations = explode(',', $operations);
         }
 

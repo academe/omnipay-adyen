@@ -63,7 +63,7 @@ class AuthorizeResponse extends AbstractResponse implements RedirectResponseInte
     /**
      * For 3D Secure.
      * If static::SECURE_3D_SMS_VERIFICATION then the end user
-     * will suply an SMS code to be submitted.
+     * will supply an SMS code to be submitted.
      */
     public function getPaRequest()
     {

@@ -173,7 +173,7 @@ $gateway->initialize([
 ]);
 ```
 
-The `CreditCard` class is used to suply any billing details.
+The `CreditCard` class is used to supply any billing details.
 Shipping detais are not supported at this time, but may be later.
 
 ```php
@@ -315,7 +315,7 @@ $request = $gateway->capture(
 ]);
 ```
 
-The response you get back will return `isSuccessful() === true'
+The response you get back will return `isSuccessful() === true`
 if the request to capture was accepted.
 **Note** however that this is just a request to the gateway.
 The result of the capture will be returned via the `notificaton`
@@ -348,7 +348,7 @@ an autorisation request to the API, server-to-server.
 
 The client-side fuctionality can be completely built by hand, but the following
 minimal example shows how this library can help build it.
-The *laravel blade* view format is used in the example.
+The *laravel blade* view syntax is used in the example.
 
 ```php
 $gateway = Omnipay\Omnipay::create('Adyen\Cse');
@@ -371,7 +371,7 @@ $request = $gateway->encryptionClient([
 </head>
 
 <body>
-    <form method="POST" action="{{ $response->getReturnUrl() }}" id="adyen-encrypted-form">
+    <form method="POST" action="{{ $request->getReturnUrl() }}" id="adyen-encrypted-form">
         <input type="text" size="20" data-encrypted-name="number" value="4444333322221111" />
         <input type="text" size="20" data-encrypted-name="holderName" value="User Name" />
         <input type="text" size="2" data-encrypted-name="expiryMonth" value="10" />
@@ -409,7 +409,7 @@ This field must be accepted by the `https://example.com/payment-handler` page
 ### An Encrypted Card Authorises a Payment
 
 This is the server-side handling.
-Once the CSE form has been POSTed to your clienty site,
+Once the CSE form has been POSTed to your client site,
 the encrypted card details will be available.
 It can be used to submit an authorisation like this:
 
@@ -448,24 +448,48 @@ $response = $request->send();
 if ($response->isSuccessful()) {
     echo $response->getTransactionReference();
 } elseif ($response->isRedirect()) {
+    // Lazy way to do the redirect.
+    // Or use $response->redirectUrl(), redirectMethod(), redirectData()
     $response->redirect();
 }
 ```
 
-TODO: 3D Secure completion with completeAuthorize (for API and CSE)
+If `isSuccessful()` is true, then the transaction is complete and ends here.
+
+If `isSuccessful()` is not true, and `isRedirect()` is true, then the user
+has to be redirected to the bank for 3D Secure authorisation.
+The `redirectData()` you are given will generally include `PaReq`, `MD` and
+`TermUrl`.
+
+### 3D Secure Response
+
+On return from the 3D Secure authorisation, you will need to fetch the
+results from the gateway, as that is where they will be held.
+The `completeAuthorize()` methods does this, by sending the data it finds
+in the `POST` data of the current request.
+
+```php
+$request = $gateway->completeAuthorize([
+    // shopperIp is not mandatory, but is strongly recommended.
+    'shopperIp' => '123.45.67.89',
+]);
+
+$response = $request->send();
+```
+
+The `$response` will be the final response, as you would get without
+the additional step of 3D Secure if it was not enabled.
 
 ## Notifications
 
 The Adyen APIs are by nature asynchronous.
 Just about every event can generate a notification to your application.
 By default, no notifications are sent, but they can be set up in the
-administratino pages.
+administration pages.
 
 For security, the notifications can use Basic Auth to access your pages,
 and a signature based on some key fields provides confirmation that those
 fields have not been changed en-route.
-*At the time of writing, neither of these features are working, but some
-tickets have been raised to resolve these issues.*
 
 Notifications can be sent as SOAP, JSON or Form POST messages.
 This driver supports both JSON and Form POST.
