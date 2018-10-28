@@ -46,7 +46,9 @@ class ModificationResponse extends AbstractResponse
      */
     public function getPspReference()
     {
-        return $this->getData()['pspReference'] ?? null;
+        return isset($this->getData()['pspReference'])
+            ? $this->getData()['pspReference']
+            : null;
     }
 
     /**
@@ -54,7 +56,9 @@ class ModificationResponse extends AbstractResponse
      */
     public function getResponseResult()
     {
-        return $this->getData()['response'] ?? null;
+        return isset($this->getData()['response'])
+            ? $this->getData()['response']
+            : null;
     }
 
     // The next four are only returned in the event of an error.
@@ -64,7 +68,9 @@ class ModificationResponse extends AbstractResponse
      */
     public function getStatus()
     {
-        return $this->getData()['status'] ?? null;
+        return isset($this->getData()['status'])
+            ? $this->getData()['status']
+            : null;
     }
 
     /**
@@ -72,7 +78,9 @@ class ModificationResponse extends AbstractResponse
      */
     public function getErrorCode()
     {
-        return $this->getData()['errorCode'] ?? null;
+        return isset($this->getData()['errorCode'])
+            ? $this->getData()['errorCode']
+            : null;
     }
 
     /**
@@ -80,7 +88,9 @@ class ModificationResponse extends AbstractResponse
      */
     public function getMessage()
     {
-        return $this->getData()['message'] ?? null;
+        return isset($this->getData()['message'])
+            ? $this->getData()['message']
+            : null;
     }
 
     /**
@@ -88,6 +98,8 @@ class ModificationResponse extends AbstractResponse
      */
     public function getValidation()
     {
-        return $this->getData()['validation'] ?? null;
+        return isset($this->getData()['validation'])
+            ? $this->getData()['validation']
+            : null;
     }
 }

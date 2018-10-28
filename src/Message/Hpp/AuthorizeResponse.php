@@ -24,7 +24,9 @@ class AuthorizeResponse extends AbstractResponse implements RedirectResponseInte
 
     public function getBrandCode()
     {
-        return $this->getData()['brandCode'] ?? null;
+        return isset($this->getData()['brandCode'])
+            ? $this->getData()['brandCode']
+            : null;
     }
 
     /**

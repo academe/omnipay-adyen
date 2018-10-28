@@ -61,7 +61,9 @@ class CompleteAuthorizeResponse extends AbstractResponse
      */
     public function getAuthResult()
     {
-        return $this->getData()['authResult'] ?? null;
+        return isset($this->getData()['authResult'])
+            ? $this->getData()['authResult']
+            : null;
     }
 
     /**
@@ -69,7 +71,9 @@ class CompleteAuthorizeResponse extends AbstractResponse
      */
     public function getMerchantReference()
     {
-        return $this->getData()['merchantReference'] ?? null;
+        return isset($this->getData()['merchantReference'])
+            ? $this->getData()['merchantReference']
+            : null;
     }
 
     /**
@@ -77,7 +81,9 @@ class CompleteAuthorizeResponse extends AbstractResponse
      */
     public function getPaymentMethod()
     {
-        return $this->getData()['paymentMethod'] ?? null;
+        return isset($this->getData()['paymentMethod'])
+            ? $this->getData()['paymentMethod']
+            : null;
     }
 
     /**
@@ -85,7 +91,9 @@ class CompleteAuthorizeResponse extends AbstractResponse
      */
     public function getPspReference()
     {
-        return $this->getData()['pspReference'] ?? null;
+        return isset($this->getData()['pspReference'])
+            ? $this->getData()['pspReference']
+            : null;
     }
 
     /**
@@ -93,7 +101,9 @@ class CompleteAuthorizeResponse extends AbstractResponse
      */
     public function getShopperLocale()
     {
-        return $this->getData()['shopperLocale'] ?? null;
+        return isset($this->getData()['shopperLocale'])
+            ? $this->getData()['shopperLocale']
+            : null;
     }
 
     /**
@@ -101,6 +111,8 @@ class CompleteAuthorizeResponse extends AbstractResponse
      */
     public function getSkinCode()
     {
-        return $this->getData()['skinCode'] ?? null;
+        return isset($this->getData()['skinCode'])
+            ? $this->getData()['skinCode']
+            : null;
     }
 }

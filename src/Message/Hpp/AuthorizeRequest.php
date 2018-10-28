@@ -35,12 +35,12 @@ class AuthorizeRequest extends AbstractHppRequest
         $data['sessionValidity'] = $this->getSessionValidity();
 
         if ($card = $this->getCard()) {
-            $data['billingAddress.houseNumberOrName'] = $card->getBillingAddress1() ?? '';
-            $data['billingAddress.street'] = $card->getBillingAddress2() ?? '';
-            $data['billingAddress.city'] = $card->getBillingCity() ?? '';
-            $data['billingAddress.stateOrProvince'] = $card->getBillingState() ?? '';
-            $data['billingAddress.country'] = $card->getBillingCountry() ?? '';
-            $data['billingAddress.postalCode'] = $card->getBillingPostCode() ?? '';
+            $data['billingAddress.houseNumberOrName'] = $card->getBillingAddress1() ?: '';
+            $data['billingAddress.street'] = $card->getBillingAddress2() ?: '';
+            $data['billingAddress.city'] = $card->getBillingCity() ?: '';
+            $data['billingAddress.stateOrProvince'] = $card->getBillingState() ?: '';
+            $data['billingAddress.country'] = $card->getBillingCountry() ?: '';
+            $data['billingAddress.postalCode'] = $card->getBillingPostCode() ?: '';
 
             if ($shopperEmail = $card->getEmail()) {
                 $data['shopperEmail'] = $shopperEmail;
