@@ -188,18 +188,19 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     /**
      * Generate a signature for a signing string.
      *
-     * @param string $$signingString
+     * @param string $signingString
+     * @param string $secret
      * @return string
      * @see https://docs.adyen.com/developers/hpp-manual#hpphmaccalculation
      */
-    public function generateSignature($signingString)
+    public function generateSignature($signingString, $secret)
     {
         // base64-encode the binary result of the HMAC computation.
 
         return base64_encode(hash_hmac(
             'sha256',
             $signingString,
-            pack("H*", $this->getSecret()),
+            pack("H*", $secret),
             true
         ));
     }

@@ -53,8 +53,12 @@ class CompleteAuthorizeRequest extends AbstractHppRequest
         // should recover the same signature.
 
         $signingString = $this->getSigningString($data);
+        $generatedSignatureString = $this->generateSignature(
+            $signingString,
+            $this->getSecret()
+        );
 
-        if ($this->generateSignature($signingString) !== $merchantSig) {
+        if ($generatedSignatureString !== $merchantSig) {
             throw new InvalidRequestException(
                 'Incorrect signature; server request may have been tampered.'
             );

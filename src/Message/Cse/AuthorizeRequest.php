@@ -92,7 +92,7 @@ class AuthorizeRequest extends ApiAuthorizeRequest
         // Find it in the current POST data instead.
 
         return ($this->httpRequest->request->get(
-            $this->encryptedDataName)
-        );
+            $this->encryptedDataName
+        ));
     }
 }

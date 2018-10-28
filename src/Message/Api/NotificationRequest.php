@@ -92,11 +92,28 @@ class NotificationRequest extends AbstractRequest implements NotificationInterfa
     protected $jsonPrefix = 'notificationItems.0.NotificationRequestItem';
 
     /**
+     * The completed/pending/failed status only applies to
+     * a subset of the different types of notification that
+     * could be received.
      *
+     * @inherit
      */
     public function getTransactionStatus()
     {
-        // TODO
+        $eventCode = $this->getEventCode();
+        $success = $this->getSuccess();
+
+        if ($eventCode === static::EVENT_CODE_PENDING) {
+            return $success ? static::STATUS_PENDING : static::STATUS_FAILED;
+        }
+
+        if ($success === true) {
+            return static::STATUS_COMPLETED;
+        }
+
+        if ($success === false) {
+            return static::STATUS_FAILED;
+        }
     }
 
     /**
@@ -128,20 +145,25 @@ class NotificationRequest extends AbstractRequest implements NotificationInterfa
     }
 
     /**
+     * @param mixed $value A number, string or boolean
      * @return bool|null
      */
     protected function mapToBoolean($value)
     {
         if (is_string($value)) {
-            if (strtolower($value) === 'true') {
+            if (strtolower($value) === 'true' || $value === '1') {
                 return true;
-            } elseif (strtolower($value) === 'false') {
+            } elseif (strtolower($value) === 'false' || $value === '0') {
                 return false;
             }
         }
 
         if (gettype($value) === 'boolean') {
             return $value;
+        }
+
+        if (gettype($value) === 'integer') {
+            return (bool)$value;
         }
     }
 
@@ -297,14 +319,20 @@ class NotificationRequest extends AbstractRequest implements NotificationInterfa
     /**
      * @return bool|null the raw success flag
      */
+    public function getSuccessRaw()
+    {
+        return $this->getDataItem(
+            'success',
+            $this->getDataItem($this->jsonPrefix . '.success')
+        );
+    }
+
+    /**
+     * @return bool|null the success flag
+     */
     public function getSuccess()
     {
-        return $this->mapToBoolean(
-            $this->getDataItem(
-                'success',
-                $this->getDataItem($this->jsonPrefix . '.success')
-            )
-        );
+        return $this->mapToBoolean($this->getSuccessRaw());
     }
 
     /**
@@ -687,7 +715,7 @@ class NotificationRequest extends AbstractRequest implements NotificationInterfa
         }
 
         // Expand keys with dots '.' to arrays.
-        // This provides a deeper daat structure that is easier
+        // This provides a deeper data structure that is easier
         // to walk and provides grouping of related data.
 
         $this->payload = $this->expandKeys($this->payload);
@@ -740,5 +768,53 @@ class NotificationRequest extends AbstractRequest implements NotificationInterfa
         }
 
         return $this;
+    }
+
+    /**
+     * HMAC signing of notifications is optional.
+     * The check will only be performed if the appropriate
+     * signing key is supplied server side.
+     *
+     * @return bool
+     */
+    public function isValidSignature()
+    {
+        $secret = $this->getNotificationSecret();
+
+        if ($secret === null) {
+            // No secret supplied, to we will not be checking the
+            // HMAC signature.
+
+            return true;
+        }
+
+        // Signature supplied with the server request.
+
+        $requestSignature = $this->getHmacSignature();
+
+        // Signature generated locally.
+
+        $signingData = [
+            $this->getPspReference(),
+            $this->getOriginalTransactionReference(),
+            $this->getMerchantAccountCode(),
+            $this->getMerchantReference(),
+            $this->getAmountInteger(),
+            $this->getCurrencyCode(),
+            $this->getEventCode(),
+            $this->getSuccessRaw(),
+        ];
+
+        $signingString = implode(':', $signingData);
+
+        $generatedSignatureString = $this->generateSignature($signingString, $secret);
+
+        if ($requestSignature !== $generatedSignatureString) {
+            throw new InvalidRequestException(
+                'Incorrect signature; server request may have been tampered.'
+            );
+        }
+
+        return true;
     }
 }

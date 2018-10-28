@@ -13,9 +13,9 @@ use Omnipay\Common\Message\FetchIssuersResponseInterface;
 use Omnipay\Common\PaymentMethod;
 use Omnipay\Common\Issuer;
 
-class FetchPaymentMethodsResponse
-    extends AbstractResponse
-    implements FetchPaymentMethodsResponseInterface, FetchIssuersResponseInterface
+class FetchPaymentMethodsResponse extends AbstractResponse implements
+    FetchPaymentMethodsResponseInterface,
+    FetchIssuersResponseInterface
 {
     /**
      * @var array

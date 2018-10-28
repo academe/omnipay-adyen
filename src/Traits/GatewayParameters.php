@@ -44,6 +44,21 @@ trait GatewayParameters
     }
 
     /**
+     * Will be a hex string set in
+     * Settings -> Server Communication -> Standard Notification
+     * @return string|null
+     */
+    public function getNotificationSecret()
+    {
+        return $this->getParameter('notificationSecret');
+    }
+
+    public function setNotificationSecret($value)
+    {
+        return $this->setParameter('notificationSecret', $value);
+    }
+
+    /**
      * @return string|null
      */
     public function getCountryCode()
