@@ -23,14 +23,16 @@
         }
     ],
     "autoload": {
-        "psr-4": { "Omnipay\\Adyen\\" : "src/" }
+        "psr-4": {
+            "Omnipay\\Adyen\\" : "src/"
+        }
     },
     "require": {
         "omnipay/common": "~3.0"
     },
     "require-dev": {
         "omnipay/tests": "~3.0",
-        "squizlabs/php_codesniffer": "~3.0"
+        "squizlabs/php_codesniffer": "^3"
     },
     "extra": {
         "branch-alias": {
