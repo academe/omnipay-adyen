@@ -6,8 +6,8 @@
 FIX: [![Latest Stable Version](https://poser.pugx.org/omnipay/dummy/version.png)](https://packagist.org/packages/omnipay/dummy)
 FIX: [![Total Downloads](https://poser.pugx.org/omnipay/dummy/d/total.png)](https://packagist.org/packages/omnipay/dummy)
 
-[Omnipay](https://github.com/thephpleague/omnipay) is a framework agnostic, multi-gateway payment
-processing library for PHP 5.3+. This package implements Dummy support for Omnipay.
+[Omnipay 3.x](https://github.com/thephpleague/omnipay) is a framework agnostic,
+multi-gateway payment processing library for PHP 5.6+.
 
 Table of Contents
 =================
@@ -34,15 +34,13 @@ Table of Contents
 Omnipay is installed via [Composer](http://getcomposer.org/). To install, simply require `league/omnipay` and `omnipay/dummy` with Composer:
 
 ```
-composer require acadweme/omnipay-adyen
+composer require academe/omnipay-adyen
 ```
-
-**NOTE: this package is in development, so things will change, break, and change direction**
 
 ## Hosted Payment Pages (HPP)
 
 This method hosts the payment pages on the gateway, and the user is
-sent to those pages to make a payment.
+sent to those pages on the gateway to make a payment.
 
 A number of payment methods are supported, and they will vary depending
 on the location of the merchant site (known here as local payment methods).
