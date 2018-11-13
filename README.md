@@ -516,9 +516,9 @@ then the driver will throw an exception if none is supplied by the API.
 
 You may wish to implement Basic Auth through your framework, perhaps in
 routing middleware, rather than in this package.
-It just depends on how far through the pipeline you would like an a
-failing Basic Auth request to go through, which will detrmine where the
-details can be logged.
+It just depends on how far through your application pipeline you would like
+a failing Basic Auth request to go.
+That will determine where the details can be logged.
 
 The `$request` will supply a wealth of information regarding the notification,
 examples of which include:
