@@ -13,7 +13,7 @@ use Omnipay\Adyen\Message\Cse\AuthorizeRequest;
 use Omnipay\Adyen\Message\Cse\CompleteAuthorizeRequest;
 use Omnipay\Adyen\Message\Cse\EncryptionClientRequest;
 
-class CseGateway extends AbstractGateway
+class CseGateway extends ApiGateway
 {
     public function getName()
     {
