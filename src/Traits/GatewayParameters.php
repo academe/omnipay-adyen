@@ -100,6 +100,19 @@ trait GatewayParameters
     /**
      * @return string|null
      */
+    public function getClientPublicKey()
+    {
+        return $this->getParameter('clientPublicKey');
+    }
+
+    public function setClientPublicKey($value)
+    {
+        return $this->setParameter('clientPublicKey', $value);
+    }
+
+    /**
+     * @return string|null
+     */
     public function getUsername()
     {
         return $this->getParameter('username');

@@ -1,6 +1,6 @@
 <?php
 
-namespace Omnipay\Adyen\Message\Cse;
+namespace Omnipay\Adyen\Message\Api;
 
 /**
  * Client-side support for CSE (Client Side Encryption).
@@ -20,7 +20,7 @@ class EncryptionClientRequest extends AbstractRequest
      * The form will submit to the merchant site with the encrypted
      * card data, where a back-end authorisation can then be performed.
      *
-     * @inherit
+     * @throws \Omnipay\Common\Exception\InvalidRequestException
      */
     public function getData()
     {
@@ -40,6 +40,7 @@ class EncryptionClientRequest extends AbstractRequest
      * It will be unique for every site due to the public token it contains.
      *
      * @return string URL
+     * @throws \Omnipay\Common\Exception\InvalidRequestException
      */
     public function getLibraryUrl()
     {
@@ -70,6 +71,10 @@ class EncryptionClientRequest extends AbstractRequest
      * This is just a service class. There is not really anything
      * to send, so just return the same object in case anyone does
      * "send" this request.
+     *
+     * @param $data
+     *
+     * @return \Omnipay\Adyen\Message\Api\EncryptionClientRequest
      */
     public function sendData($data)
     {

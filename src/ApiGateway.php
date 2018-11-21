@@ -9,6 +9,8 @@ namespace Omnipay\Adyen;
 use Omnipay\Adyen\Message\Api\AuthorizeRequest;
 use Omnipay\Adyen\Message\Api\CancelRequest;
 use Omnipay\Adyen\Message\Api\CaptureRequest;
+use Omnipay\Adyen\Message\Api\CompleteAuthorizeRequest;
+use Omnipay\Adyen\Message\Api\EncryptionClientRequest;
 use Omnipay\Adyen\Message\Api\RefundRequest;
 use Omnipay\Adyen\Message\Api\NotificationRequest;
 
@@ -27,6 +29,18 @@ class ApiGateway extends AbstractGateway
     public function authorize(array $parameters = array())
     {
         return $this->createRequest(AuthorizeRequest::class, $parameters);
+    }
+
+    /**
+     * Complete an authorization after return from 3D-Secure.
+     *
+     * @param array $parameters
+     *
+     * @return \Omnipay\Adyen\Message\Api\CompleteAuthorizeRequest
+     */
+    public function completeAuthorize(array $parameters = array())
+    {
+        return $this->createRequest(CompleteAuthorizeRequest::class, $parameters);
     }
 
     /**
@@ -66,5 +80,17 @@ class ApiGateway extends AbstractGateway
     public function acceptNotification(array $parameters = [])
     {
         return $this->createRequest(NotificationRequest::class, $parameters);
+    }
+
+    /**
+     * Request used to generate the encryption form.
+     *
+     * @param array $parameters
+     *
+     * @return \Omnipay\Common\Message\AbstractRequest
+     */
+    public function encryptionClient(array $parameters = [])
+    {
+        return $this->createRequest(EncryptionClientRequest::class, $parameters);
     }
 }

@@ -7,7 +7,6 @@ namespace Omnipay\Adyen\Message\Api;
  */
 
 use Omnipay\Adyen\Message\AbstractApiRequest;
-use Omnipay\Common\Exception\InvalidRequestException;
 
 class AuthorizeRequest extends AbstractApiRequest
 {
@@ -27,16 +26,8 @@ class AuthorizeRequest extends AbstractApiRequest
     {
         $this->validate('amount', 'currency', 'merchantAccount', 'transactionId');
 
-        // additionalData is populated from a number of sources.
-
-        $additionalData = [];
-
         // Merge in the payment method details (CC number, encrypted card, etc.)
-
-        $additionalData = array_merge(
-            $additionalData,
-            $this->getPaymentMethodData()
-        );
+        $additionalData = $this->getPaymentMethodData();
 
         // Billing address, if supplied.
 
@@ -101,6 +92,12 @@ class AuthorizeRequest extends AbstractApiRequest
             return ['bankAccount' => $bankData];
         }
 
+        $encryptedData = $this->getEncryptedData();
+
+        if(!empty($encryptedData)) {
+            return ['card.encrypted.json' => $encryptedData];
+        }
+
         return [];
     }
 
@@ -131,6 +128,32 @@ class AuthorizeRequest extends AbstractApiRequest
         }
 
         return $data;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getCardToken()
+    {
+        return $this->getEncryptedData();
+    }
+
+    public function setCardToken($value)
+    {
+        return $this->setEncryptedData($value);
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getEncryptedData()
+    {
+        return $this->getParameter('encryptedData');
+    }
+
+    public function setEncryptedData($value)
+    {
+        return $this->setParameter('encryptedData', $value);
     }
 
     // TODO

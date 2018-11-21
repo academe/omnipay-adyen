@@ -12,7 +12,7 @@ class AuthorizeResponse extends AbstractResponse implements RedirectResponseInte
     use DataWalker;
 
     /**
-     * @var valus for the resultCode.
+     * Constants for the resultCode.
      */
     const RESULT_CODE_AUTHORISED        = "Authorised";
     const RESULT_CODE_REFUSED           = "Refused";
@@ -27,8 +27,7 @@ class AuthorizeResponse extends AbstractResponse implements RedirectResponseInte
 
     public function isSuccessful()
     {
-        return $this->getResultCode() === static::RESULT_CODE_AUTHORISED
-            && ! $this->getMessage();
+        return $this->getResultCode() === static::RESULT_CODE_AUTHORISED && ! $this->getMessage();
     }
 
     public function isCancelled()

@@ -1,19 +1,21 @@
 <?php
 
-namespace Omnipay\Adyen\Message\Cse;
+namespace Omnipay\Adyen\Message\Api;
 
 /**
  * Authorize a payment.
  */
 
-use InvalidArgumentException;
-use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Adyen\Message\Api\AuthorizeRequest as ApiAuthorizeRequest;
 
 class CompleteAuthorizeRequest extends ApiAuthorizeRequest
 {
     protected $endpointService = 'authorise3d';
 
+    /**
+     * @return array|mixed
+     * @throws \Omnipay\Common\Exception\InvalidRequestException
+     */
     public function getData()
     {
         $this->validate('merchantAccount');
@@ -39,6 +41,11 @@ class CompleteAuthorizeRequest extends ApiAuthorizeRequest
         return $this->getParameter('shopperIp');
     }
 
+    /**
+     * @param $value
+     *
+     * @return $this
+     */
     public function setShopperIp($value)
     {
         return $this->setParameter('shopperIp', $value);
@@ -49,10 +56,14 @@ class CompleteAuthorizeRequest extends ApiAuthorizeRequest
      */
     public function getMd()
     {
-        return $this->getParameter('md')
-            ?: $this->httpRequest->request->get('MD');
+        return $this->getParameter('md') ?: $this->httpRequest->request->get('MD');
     }
 
+    /**
+     * @param $value
+     *
+     * @return $this
+     */
     public function setMd($value)
     {
         return $this->setParameter('md', $value);
@@ -66,10 +77,14 @@ class CompleteAuthorizeRequest extends ApiAuthorizeRequest
      */
     public function getPaResponse()
     {
-        return $this->getParameter('paResponse')
-            ?: $this->httpRequest->request->get('PaRes');
+        return $this->getParameter('paResponse') ?: $this->httpRequest->request->get('PaRes');
     }
 
+    /**
+     * @param $value
+     *
+     * @return $this
+     */
     public function setPaResponse($value)
     {
         return $this->setParameter('paResponse', $value);
