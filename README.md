@@ -33,7 +33,7 @@ Table of Contents
 
 ## Installation
 
-Omnipay is installed via [Composer](http://getcomposer.org/). To install, simply require `league/omnipay` and `omnipay/dummy` with Composer:
+Omnipay is installed via [Composer](http://getcomposer.org/).
 
 ```
 composer require academe/omnipay-adyen
