@@ -152,8 +152,10 @@ $endpoint = $request->getEndpoint();
 ```
 
 `POST` the `$data` to the `$endpoint` to get the JSON response.
-Rememeber this data is signed, so parameters cannot be changed at
+Remember this data is signed, so parameters cannot be changed at
 the client side.
+Some client-side JavaScipt will likely be needed to send an AJAX
+POST request to `$endpoint` with `$data` as the Form payload.
 
 ### HPP Authorises a Payment
 
@@ -233,7 +235,7 @@ By defauit, the address is shown to the user.
 
 Setting `addressLocked` will prevent the user from changing their address
 details on the gateway.
-Although all these details are sent to he gateway in the redirect, they are
+Although all these details are sent to the gateway in the redirect, they are
 signed, so any attempt by the user to change them will result in a rejection.
 
     $request->setAddressLocked(true);
@@ -245,14 +247,15 @@ Now "send" the request to get the redirection response.
     $response = $request->send();
 
 The redirect will be a `POST`.
-The details to include are in `$response->getData()` and `$response->getRedirectUrl()`,
+The details to include are in `$response->getRedirectData()` and `$response->getRedirectUrl()`,
 so you can build a form to post or auto-post, either to the top page
 or to an iframe. Or you can just issue `echo $response->redirect()` as a rough-and-ready
 redirection.
 
-The user will be redirected, will enter their authorisation details on the
-gateway hosted page, then will be returned to the `returnUrl`.
-This is where the transaction is completed.
+The user will be redirected to the Adyen hosted page,
+will enter their authorisation details on that page,
+then will be returned to the `returnUrl`.
+This is where the transaction is completed (see next section).
 
 #### Complete Transaction on Return
 
@@ -277,7 +280,7 @@ var_dump($response->getTransactionId());
 The data is signed, and if the signature is invalid then an exception will
 be thrown during the `send()` operation.
 
-The get further details about the authorisation, the transaction will need to
+To get further details about the authorisation, the transaction will need to
 be fetched from the gateway using the API.
 This result just gives you the overall result, and returns your `transactionId`
 so you can confirm it is the result of the transaction you are expecting
@@ -309,9 +312,11 @@ $gateway->initialize([
 $request = $gateway->capture(
     // The original transaction reference of the authorisation.
     'transactionReference' => $transactionReference,
+
     // The original amount in full or partial amount.
     'amount' => 9.99,
-    // Optionally you can give the request your own reference.
+
+    // Optionally you can give the request an ID of your own.
     'transactionId' => $captureTransactionId,
 ]);
 ```
@@ -343,7 +348,7 @@ but are encrypted at the client (browser), and the encrypted string is then subm
 your site, along with any additional details.
 
 The encrpyted details are then used in place of credit card details when making
-an autorisation request to the API, server-to-server.
+an authorisation request to the API, server-to-server.
 
 ### Building a Form for Encrypting
 
@@ -372,6 +377,9 @@ $request = $gateway->encryptionClient([
 </head>
 
 <body>
+    /* Do NOT use the name attribute for any of these form credit card detail items. */
+    /* The default card details shown are useful when testing, but not for production. */
+
     <form method="POST" action="{{ $request->getReturnUrl() }}" id="adyen-encrypted-form">
         <input type="text" size="20" data-encrypted-name="number" value="4444333322221111" />
         <input type="text" size="20" data-encrypted-name="holderName" value="User Name" />
@@ -385,8 +393,11 @@ $request = $gateway->encryptionClient([
     <script>
     // The form element to encrypt.
     var form = document.getElementById('adyen-encrypted-form');
+
     // See https://github.com/Adyen/CSE-JS/blob/master/Options.md for details on the options to use.
+    // The options were not listed in official documentation at time of writing.
     var options = {};
+
     // Bind encryption options to the form.
     adyen.createEncryptedForm(form, options);
     </script>
@@ -429,13 +440,16 @@ $gateway->initialize([
 $request = $gateway->authorize([
     'amount' => 11.99,
     'transactionId' => $transactionId,
+
     // The credit card object provides additional billing and
     // shipping details only.
     'card' => $creditCard,
+
     // You can pass in the encrypted card as the cardToken,
     // or leave the authorize request to extract it from current
     // POST data.
     'cardToken' => $_POST['encryptedData'],
+
     // If you want to use 3D Secure, then set the 3D Secure flag
     // and the URL to return the user to.
     '3DSecure' => true,
@@ -466,7 +480,7 @@ The `redirectData()` you are given will generally include `PaReq`, `MD` and
 
 On return from the 3D Secure authorisation, you will need to fetch the
 results from the gateway, as that is where they will be held.
-The `completeAuthorize()` methods does this, by sending the data it finds
+The `completeAuthorize()` method does this, by sending the data it finds
 in the `POST` data of the current request.
 
 ```php
