@@ -486,6 +486,8 @@ Just about every event can generate a notification to your application.
 By default, no notifications are sent, but they can be set up in the
 administration pages.
 
+### Notification Server Request (from gateway)
+
 For security, the notifications can use Basic Auth to access your pages,
 and a signature based on some key fields provides confirmation that those
 fields have not been changed en-route.
@@ -510,7 +512,7 @@ $gateway->initialize([
 $request = $gateway->acceptNotification();
 ```
 
-Note that the notifications HMAC key is not the same as the HPP HMAX key.
+Note that the notifications HMAC key is not the same as the HPP HMAC key.
 The HMAC check is optional, but if you supply the key here,
 then the driver will throw an exception if none is supplied by the API.
 
@@ -553,17 +555,48 @@ $request->isValidHmac()
 $request->send()
 ```
 
-TODO: implementing the response to the gateway
+### Notification Response (to gateway)
+
+The gateway will follow an algorithm to retry sending notifications
+at increasing intervals, until it gets an acceptance response.
+The expected response will vary, depending on what content type the original
+notification used.
+The http response code must be 200, unless either the signature check or
+Basic Auth checks fail.
+The `Content-Type` header is *assumed* to be set appropriately.
+
+The response body payload for a `Form` notification must be the text:
+
+    [accepted]
+
+This is shown [in the documenation](https://docs.adyen.com/developers/notifications/set-up-notifications)
+as follows, which is wrong (`&5B` vs `%5D`? What content type is this?)
+but worth noting in case this documentation needs tweaking:
+
+    &5Baccepted%5D
+
+The response body payload for a `JSON` notification must be the JSON data:
+
+    {"notificationResponse":"[accepted]"}
+
+This driver does not handle the response at this time, so will need
+to be coded into the merchant site.
+The merchant site must accept the notification, so it is recommended the
+message is queued for offline processing so that the notification endpoint
+can respond as quickly as possible.
+
+* TODO: programatically implement the response to the gateway.
+* TODO: test whether the response must match the request content type,
+  or whether it just needs to be consistent with the response `Content-Type`
+  header.
 
 ## Support
 
 If you are having general issues with Omnipay, we suggest posting on
-[Stack Overflow](http://stackoverflow.com/). Be sure to add the
-[omnipay tag](http://stackoverflow.com/questions/tagged/omnipay) so it can be easily found.
+[Stack Overflow](http://stackoverflow.com/).
+Be sure to add the [omnipay tag](http://stackoverflow.com/questions/tagged/omnipay)
+so it can be easily found.
 
-If you want to keep up to date with release anouncements, discuss ideas for the project,
-or ask more detailed questions, there is also a [mailing list](https://groups.google.com/forum/#!forum/omnipay) which
-you can subscribe to.
-
-If you believe you have found a bug, please report it using the [GitHub issue tracker](https://github.com/thephpleague/omnipay-dummy/issues),
+If you believe you have found a bug, please report it using the
+[GitHub issue tracker](https://github.com/academe/omnipay-adyen/issues),
 or better yet, fork the library and submit a pull request.
