@@ -3,8 +3,8 @@
 **Adyen driver (HPP, CSE and API integration) for the Omnipay PHP payment processing library**
 
 [![Build Status](https://travis-ci.org/academe/omnipay-adyen.svg?branch=master)](https://travis-ci.org/academe/omnipay-adyen)
-FIX: [![Latest Stable Version](https://poser.pugx.org/omnipay/dummy/version.png)](https://packagist.org/packages/omnipay/dummy)
-FIX: [![Total Downloads](https://poser.pugx.org/omnipay/dummy/d/total.png)](https://packagist.org/packages/omnipay/dummy)
+[![Latest Stable Version](https://poser.pugx.org/academe/omnipay-adyen/version.png)](https://packagist.org/packages/academe/omnipay-adyen)
+[![Total Downloads](https://poser.pugx.org/academe/omnipay-adyen/d/total.png)](https://packagist.org/packages/academe/omnipay-adyen)
 
 [Omnipay 3.x](https://github.com/thephpleague/omnipay) is a framework agnostic,
 multi-gateway payment processing library for PHP 5.6+.
@@ -27,6 +27,8 @@ Table of Contents
          * [An Encrypted Card Authorises a Payment](#an-encrypted-card-authorises-a-payment)
          * [3D Secure Response](#3d-secure-response)
       * [Notifications](#notifications)
+         * [Notification Server Request (from gateway)](#notification-server-request-from-gateway)
+         * [Notification Response (to gateway)](#notification-response-to-gateway)
       * [Support](#support)
 
 ## Installation
