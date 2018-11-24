@@ -8,10 +8,11 @@ namespace Omnipay\Adyen\Message\Api;
 
 use Omnipay\Adyen\Message\AbstractApiRequest;
 use Omnipay\Common\Exception\InvalidRequestException;
+use Omnipay\Adyen\Message\AbstractRequest;
 
 class AuthorizeRequest extends AbstractApiRequest
 {
-    protected $endpointService = 'authorise';
+    protected $endpointService = AbstractRequest::SERVICE_GROUP_PAYMENT_AUTHORISE;
 
     public function createResponse($data)
     {

@@ -9,10 +9,11 @@ namespace Omnipay\Adyen\Message\Cse;
 use InvalidArgumentException;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Adyen\Message\Api\AuthorizeRequest as ApiAuthorizeRequest;
+use Omnipay\Adyen\Message\AbstractRequest;
 
 class CompleteAuthorizeRequest extends ApiAuthorizeRequest
 {
-    protected $endpointService = 'authorise3d';
+    protected $endpointService = AbstractRequest::SERVICE_GROUP_PAYMENT_AUTHORISE3D;
 
     public function getData()
     {

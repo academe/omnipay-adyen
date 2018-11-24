@@ -10,7 +10,7 @@ class CaptureRequest extends CancelRequest
 {
     public function getEndPoint($service = null)
     {
-        return $this->getPaymentUrl('capture');
+        return $this->getPaymentUrl(static::SERVICE_GROUP_PAYMENT_CAPTURE);
     }
 
     public function getData()

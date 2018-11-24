@@ -10,34 +10,69 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 {
     use GatewayParameters;
 
+    /**
+     * Constants for URL construction.
+     */
+
+    const INSTANCE_LIVE = 'live';
+    const INSTANCE_TEST = 'test';
+
+    const VERSION_DIRECTORY         = 'v2';
+    const VERSION_CHECKOUT          = 'v32';
+    const VERSION_CHECKOUT_UTILITY  = 'v1';
+    const VERSION_PAYMENT_PAYMENT   = 'v30';
+    const VERSION_PAYMENT_RECURRING = 'v25';
+    const VERSION_PAYMENT_PAYOUT    = 'v30';
+
+    const PAYMENT_GROUP_PAYMENT     = 'Payment';
+    const PAYMENT_GROUP_RECURRING   = 'Recurring';
+    const PAYMENT_GROUP_PAYOUT      = 'Payout';
+
+    const SERVICE_GROUP_PAYMENT_AUTHORISE           = 'authorise';
+    const SERVICE_GROUP_PAYMENT_AUTHORISE3D         = 'authorise3d';
+    const SERVICE_GROUP_PAYMENT_CAPTURE             = 'capture';
+    const SERVICE_GROUP_PAYMENT_CANCEL              = 'cancel';
+    const SERVICE_GROUP_PAYMENT_REFUND              = 'refund';
+    const SERVICE_GROUP_PAYMENT_CANCELORREFUND      = 'cancelOrRefund';
+    const SERVICE_GROUP_PAYMENT_VOIDPENDINGREFUND   = 'voidPendingRefund';
+    const SERVICE_GROUP_PAYMENT_REFUNDWITHDATA      = 'refundWithData';
+
+    const SERVICE_GROUP_RECURRING_LISTRECURRINGDETAILS      = 'listRecurringDetails';
+    const SERVICE_GROUP_RECURRING_DISABLE                   = 'disable';
+    const SERVICE_GROUP_RECURRING_TOKENLOOKUP               = 'tokenLookup';
+    const SERVICE_GROUP_RECURRING_SCHEDULEACCOUNTUPDATER    = 'scheduleAccountUpdater';
+
+    const SERVICE_GROUP_PAYOUT_STOREDETAIL                      = 'storeDetail';
+    const SERVICE_GROUP_PAYOUT_STOREDETAILANDSUBMITTHIRDPARTY   = 'storeDetailAndSubmitThirdParty';
+    const SERVICE_GROUP_PAYOUT_SUBMITTHIRDPARTY                 = 'submitThirdParty';
+    const SERVICE_GROUP_PAYOUT_CONFIRMTHIRDPARTY                = 'confirmThirdParty';
+    const SERVICE_GROUP_PAYOUT_DECLINETHIRDPARTY                = 'declineThirdParty';
+
+    /**
+     * URL templates for all the various services.
+     * Some of these are not yet implememented by this driver.
+     */
+
     // Pal services.
-    protected $testEndpointPal = 'https://pal-test.adyen.com/pal/servlet/{group}/{version}/{service}';
-    protected $liveEndpointPal = 'https://pal-live.adyen.com/pal/servlet/{group}/{version}/{service}';
+    protected $endpointPal = 'https://pal-{instance}.adyen.com/pal/servlet/{group}/{version}/{service}';
 
     // CSE JavaScript library.
-    protected $testEndpointCse = 'https://test.adyen.com/hpp/cse/js/{token}.shtml';
-    protected $liveEndpointCse = 'https://live.adyen.com/hpp/cse/js/{token}.shtml';
+    protected $endpointCse = 'https://{instance}.adyen.com/hpp/cse/js/{token}.shtml';
 
     // Directory services
-    protected $testEndpointDirectory = 'https://test.adyen.com/hpp/directory/{version}.shtml';
-    protected $liveEndpointDirectory = 'https://live.adyen.com/hpp/directory/{version}.shtml';
+    // {version} = VERSION_DIRECTORY
+    protected $endpointDirectory = 'https://{instance}.adyen.com/hpp/directory/{version}.shtml';
 
     // Terminal services
-    protected $testEndpointTerminal = 'https://terminal-api-test.adyen.com';
-    protected $liveEndpointTerminal = 'https://terminal-api-live.adyen.com';
-
-    // Checkout Utility
-    protected $testEndpointCheckoutUtility = 'https://checkout-test.adyen.com/v1';
-    protected $liveEndpointCheckoutUtility = 'https://checkout-live.adyen.com/v1';
+    protected $endpointTerminal = 'https://terminal-api-{instance}.adyen.com';
 
     // Checkout services
-    protected $testEndpointCheckoutServices = 'https://checkout-test.adyen.com/v32/{service}';
-    protected $liveEndpointCheckoutServices = 'https://checkout-live.adyen.com/v32/{service}';
+    // {version} = VERSION_CHECKOUT
+    protected $endpointCheckoutServices = 'https://checkout-{instance}.adyen.com/{version}/{service}';
 
-    const VERSION_DIRECTORY = 'v2';
-    const VERSION_CHECKOUT = 'v32';
-    const VERSION_CHECKOUT_UTILITY = 'v1';
-    const VERSION_PAYMENTS = 'v30';
+    // Checkout Utility
+    // {version} = VERSION_CHECKOUT_UTILITY
+    protected $endpointCheckoutUtility = 'https://checkout-{instance}.adyen.com/{version}';
 
     protected $returnContentType = 'application/json';
 
@@ -49,7 +84,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     /**
      * Expand a URL template.
      *
-     * @param string $templatye the URL with {placeholders} in
+     * @param string $template the URL with {placeholders} in
      * @param array $parameters keys as placeholder names and values as replacements
      * @return string the expanded URL
      */
@@ -63,7 +98,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     }
 
     /**
-     * Services for Paymenr group:
+     * Services for Payment group:
      * - authorise
      * - authorise3d
      * - capture
@@ -72,11 +107,13 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      * - cancelOrRefund
      * - voidPendingRefund
      * - refundWithData
+     *
      * Services for Recurring group:
      * - listRecurringDetails
      * - disable
      * - tokenLookup
      * - scheduleAccountUpdater
+     *
      * Services for Payout group:
      * - storeDetail
      * - storeDetailAndSubmitThirdParty
@@ -87,13 +124,13 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      * @param string the service name
      * @return string the appropriate test/live URL
      */
-    public function getPaymentUrl($service, $group = 'Payment', $version = self::VERSION_PAYMENTS)
-    {
-        $template = $this->getTestMode()
-            ? $this->testEndpointPal
-            : $this->liveEndpointPal;
-
-        return $this->expandUrlTemplate($template, [
+    public function getPaymentUrl(
+        $service,
+        $group = self::PAYMENT_GROUP_PAYMENT,
+        $version = self::VERSION_PAYMENT_PAYMENT
+    ) {
+        return $this->expandUrlTemplate($this->endpointPal, [
+            'instance' => ($this->getTestMode() ? static::INSTANCE_TEST : static::INSTANCE_LIVE),
             'service' => $service,
             'group' => $group,
             'version' => $version,
@@ -106,7 +143,11 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      */
     public function getRecurringUrl($service)
     {
-        return $this->getPaymentUrl($service, 'Recurring', 'v25');
+        return $this->getPaymentUrl(
+            $service,
+            static::PAYMENT_GROUP_RECURRING,
+            static::VERSION_PAYMENT_RECURRING
+        );
     }
 
     /**
@@ -115,16 +156,17 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      */
     public function getPayoutUrl($service)
     {
-        return $this->getPaymentUrl($service, 'Payout', 'v30');
+        return $this->getPaymentUrl(
+            $service,
+            static::PAYMENT_GROUP_PAYOUT,
+            static::VERSION_PAYMENT_PAYOUT
+        );
     }
 
     public function getCseUrl($token)
     {
-        $template = $this->getTestMode()
-            ? $this->testEndpointCse
-            : $this->liveEndpointCse;
-
-        return $this->expandUrlTemplate($template, [
+        return $this->expandUrlTemplate($this->endpointCse, [
+            'instance' => ($this->getTestMode() ? static::INSTANCE_TEST : static::INSTANCE_LIVE),
             'token' => $token,
         ]);
     }
@@ -134,11 +176,8 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      */
     public function getDirectoryUrl($version = self::VERSION_DIRECTORY)
     {
-        $template = $this->getTestMode()
-            ? $this->testEndpointDirectory
-            : $this->liveEndpointDirectory;
-
-        return $this->expandUrlTemplate($template, [
+        return $this->expandUrlTemplate($this->endpointDirectory, [
+            'instance' => ($this->getTestMode() ? static::INSTANCE_TEST : static::INSTANCE_LIVE),
             'version' => $version,
         ]);
     }

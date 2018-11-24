@@ -17,7 +17,11 @@ class CancelRequest extends AbstractApiRequest
      */
     public function getEndPoint($service = null)
     {
-        $service = ($this->getRefundIfCaptured() ? 'cancelOrRefund' : 'cancel');
+        $service = (
+            $this->getRefundIfCaptured()
+            ? static::SERVICE_GROUP_PAYMENT_CANCELORREFUND
+            : static::SERVICE_GROUP_PAYMENT_CANCEL
+        );
 
         return $this->getPaymentUrl($service);
     }

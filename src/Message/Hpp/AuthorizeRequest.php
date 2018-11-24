@@ -15,7 +15,7 @@ class AuthorizeRequest extends AbstractHppRequest
      */
     public function getEndpoint($service = null)
     {
-        return null;
+        return;
     }
 
     /**

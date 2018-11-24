@@ -9,10 +9,11 @@ namespace Omnipay\Adyen\Message\Cse;
 use InvalidArgumentException;
 use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Adyen\Message\Api\AuthorizeRequest as ApiAuthorizeRequest;
+use Omnipay\Adyen\Message\AbstractRequest;
 
 class AuthorizeRequest extends ApiAuthorizeRequest
 {
-    protected $endpointService = 'authorise';
+    protected $endpointService = AbstractRequest::SERVICE_GROUP_PAYMENT_AUTHORISE;
 
     /**
      * @var string Name of the encrypted data POST parameter.

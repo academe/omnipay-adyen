@@ -10,6 +10,6 @@ class RefundRequest extends CaptureRequest
 {
     public function getEndPoint($service = null)
     {
-        return $this->getPaymentUrl('refund');
+        return $this->getPaymentUrl(static::SERVICE_GROUP_PAYMENT_REFUND);
     }
 }
