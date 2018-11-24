@@ -21,21 +21,23 @@ class AuthorizeRequestTest extends TestCase
 
         $this->request->setTestMode(false);
 
+        $request = $this->request;
+
         // Payment, defaults and all elements set.
 
         $this->assertSame(
             'https://pal-live.adyen.com/pal/servlet/Payment/v30/authorise',
-            $this->request->getPaymentUrl(
-                $this->request::SERVICE_GROUP_PAYMENT_AUTHORISE
+            $request->getPaymentUrl(
+                $request::SERVICE_GROUP_PAYMENT_AUTHORISE
             )
         );
 
         $this->assertSame(
             'https://pal-live.adyen.com/pal/servlet/Payment/v30/authorise3d',
-            $this->request->getPaymentUrl(
-                $this->request::SERVICE_GROUP_PAYMENT_AUTHORISE3D,
-                $this->request::PAYMENT_GROUP_PAYMENT,
-                $this->request::VERSION_PAYMENT_PAYMENT
+            $request->getPaymentUrl(
+                $request::SERVICE_GROUP_PAYMENT_AUTHORISE3D,
+                $request::PAYMENT_GROUP_PAYMENT,
+                $request::VERSION_PAYMENT_PAYMENT
             )
         );
 
@@ -43,17 +45,17 @@ class AuthorizeRequestTest extends TestCase
 
         $this->assertSame(
             'https://pal-live.adyen.com/pal/servlet/Recurring/v25/listRecurringDetails',
-            $this->request->getPaymentUrl(
-                $this->request::SERVICE_GROUP_RECURRING_LISTRECURRINGDETAILS,
-                $this->request::PAYMENT_GROUP_RECURRING,
-                $this->request::VERSION_PAYMENT_RECURRING
+            $request->getPaymentUrl(
+                $request::SERVICE_GROUP_RECURRING_LISTRECURRINGDETAILS,
+                $request::PAYMENT_GROUP_RECURRING,
+                $request::VERSION_PAYMENT_RECURRING
             )
         );
 
         $this->assertSame(
             'https://pal-live.adyen.com/pal/servlet/Recurring/v25/listRecurringDetails',
-            $this->request->getRecurringUrl(
-                $this->request::SERVICE_GROUP_RECURRING_LISTRECURRINGDETAILS
+            $request->getRecurringUrl(
+                $request::SERVICE_GROUP_RECURRING_LISTRECURRINGDETAILS
             )
         );
 
@@ -61,17 +63,17 @@ class AuthorizeRequestTest extends TestCase
 
         $this->assertSame(
             'https://pal-live.adyen.com/pal/servlet/Payout/v30/submitThirdParty',
-            $this->request->getPaymentUrl(
-                $this->request::SERVICE_GROUP_PAYOUT_SUBMITTHIRDPARTY,
-                $this->request::PAYMENT_GROUP_PAYOUT,
-                $this->request::VERSION_PAYMENT_PAYOUT
+            $request->getPaymentUrl(
+                $request::SERVICE_GROUP_PAYOUT_SUBMITTHIRDPARTY,
+                $request::PAYMENT_GROUP_PAYOUT,
+                $request::VERSION_PAYMENT_PAYOUT
             )
         );
 
         $this->assertSame(
             'https://pal-live.adyen.com/pal/servlet/Payout/v30/submitThirdParty',
-            $this->request->getPayoutUrl(
-                $this->request::SERVICE_GROUP_PAYOUT_SUBMITTHIRDPARTY
+            $request->getPayoutUrl(
+                $request::SERVICE_GROUP_PAYOUT_SUBMITTHIRDPARTY
             )
         );
 
@@ -79,7 +81,7 @@ class AuthorizeRequestTest extends TestCase
 
         $this->assertSame(
             'https://live.adyen.com/hpp/cse/js/token-token-token.shtml',
-            $this->request->getCseUrl(
+            $request->getCseUrl(
                 'token-token-token'
             )
         );
@@ -88,12 +90,12 @@ class AuthorizeRequestTest extends TestCase
 
         $this->assertSame(
             'https://live.adyen.com/hpp/directory/v2.shtml',
-            $this->request->getDirectoryUrl()
+            $request->getDirectoryUrl()
         );
 
         $this->assertSame(
             'https://live.adyen.com/hpp/directory/v99.shtml',
-            $this->request->getDirectoryUrl(
+            $request->getDirectoryUrl(
                 'v99'
             )
         );
@@ -113,21 +115,23 @@ class AuthorizeRequestTest extends TestCase
 
         $this->request->setTestMode(true);
 
+        $request = $this->request;
+
         // Payment, defaults and all elements set.
 
         $this->assertSame(
             'https://pal-test.adyen.com/pal/servlet/Payment/v30/authorise',
-            $this->request->getPaymentUrl(
-                $this->request::SERVICE_GROUP_PAYMENT_AUTHORISE
+            $request->getPaymentUrl(
+                $request::SERVICE_GROUP_PAYMENT_AUTHORISE
             )
         );
 
         $this->assertSame(
             'https://pal-test.adyen.com/pal/servlet/Payment/v30/authorise3d',
-            $this->request->getPaymentUrl(
-                $this->request::SERVICE_GROUP_PAYMENT_AUTHORISE3D,
-                $this->request::PAYMENT_GROUP_PAYMENT,
-                $this->request::VERSION_PAYMENT_PAYMENT
+            $request->getPaymentUrl(
+                $request::SERVICE_GROUP_PAYMENT_AUTHORISE3D,
+                $request::PAYMENT_GROUP_PAYMENT,
+                $request::VERSION_PAYMENT_PAYMENT
             )
         );
 
@@ -135,17 +139,17 @@ class AuthorizeRequestTest extends TestCase
 
         $this->assertSame(
             'https://pal-test.adyen.com/pal/servlet/Recurring/v25/listRecurringDetails',
-            $this->request->getPaymentUrl(
-                $this->request::SERVICE_GROUP_RECURRING_LISTRECURRINGDETAILS,
-                $this->request::PAYMENT_GROUP_RECURRING,
-                $this->request::VERSION_PAYMENT_RECURRING
+            $request->getPaymentUrl(
+                $request::SERVICE_GROUP_RECURRING_LISTRECURRINGDETAILS,
+                $request::PAYMENT_GROUP_RECURRING,
+                $request::VERSION_PAYMENT_RECURRING
             )
         );
 
         $this->assertSame(
             'https://pal-test.adyen.com/pal/servlet/Recurring/v25/listRecurringDetails',
-            $this->request->getRecurringUrl(
-                $this->request::SERVICE_GROUP_RECURRING_LISTRECURRINGDETAILS
+            $request->getRecurringUrl(
+                $request::SERVICE_GROUP_RECURRING_LISTRECURRINGDETAILS
             )
         );
 
@@ -153,17 +157,17 @@ class AuthorizeRequestTest extends TestCase
 
         $this->assertSame(
             'https://pal-test.adyen.com/pal/servlet/Payout/v30/submitThirdParty',
-            $this->request->getPaymentUrl(
-                $this->request::SERVICE_GROUP_PAYOUT_SUBMITTHIRDPARTY,
-                $this->request::PAYMENT_GROUP_PAYOUT,
-                $this->request::VERSION_PAYMENT_PAYOUT
+            $request->getPaymentUrl(
+                $request::SERVICE_GROUP_PAYOUT_SUBMITTHIRDPARTY,
+                $request::PAYMENT_GROUP_PAYOUT,
+                $request::VERSION_PAYMENT_PAYOUT
             )
         );
 
         $this->assertSame(
             'https://pal-test.adyen.com/pal/servlet/Payout/v30/submitThirdParty',
-            $this->request->getPayoutUrl(
-                $this->request::SERVICE_GROUP_PAYOUT_SUBMITTHIRDPARTY
+            $request->getPayoutUrl(
+                $request::SERVICE_GROUP_PAYOUT_SUBMITTHIRDPARTY
             )
         );
 
@@ -171,7 +175,7 @@ class AuthorizeRequestTest extends TestCase
 
         $this->assertSame(
             'https://test.adyen.com/hpp/cse/js/token-token-token.shtml',
-            $this->request->getCseUrl(
+            $request->getCseUrl(
                 'token-token-token'
             )
         );
@@ -180,12 +184,12 @@ class AuthorizeRequestTest extends TestCase
 
         $this->assertSame(
             'https://test.adyen.com/hpp/directory/v2.shtml',
-            $this->request->getDirectoryUrl()
+            $request->getDirectoryUrl()
         );
 
         $this->assertSame(
             'https://test.adyen.com/hpp/directory/v99.shtml',
-            $this->request->getDirectoryUrl(
+            $request->getDirectoryUrl(
                 'v99'
             )
         );
