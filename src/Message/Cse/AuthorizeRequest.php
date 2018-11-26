@@ -21,6 +21,26 @@ class AuthorizeRequest extends ApiAuthorizeRequest
     protected $encryptedDataName = 'adyen-encrypted-data';
 
     /**
+     * Merge the payment informatino data into the data array.
+     * For the CSE authorise, the data is merged into
+     * the additionalData level, since it is optional.
+     *
+     * @param array $data
+     * @return array
+     */
+    public function addPaymentMethodData(array $data)
+    {
+        // Merge in the payment method details (CC number, encrypted card, etc.)
+
+        $data['additionalData'] = array_merge(
+            $data['additionalData'],
+            $this->getPaymentMethodData()
+        );
+
+        return $data;
+    }
+
+    /**
      * Get the payment data for the additionalData array.
      * This will be the CC data encrypted on the browser client.
      *

@@ -70,14 +70,27 @@ class AuthorizeRequest extends AbstractApiRequest
             'merchantAccount' => $this->getMerchantAccount(),
         ];
 
+        $data = $this->addPaymentMethodData($data);
+
+        return $data;
+    }
+
+    /**
+     * Merge the payment informatino data into the data array.
+     * For the API (direct) authorise, the data is merged into
+     * the root level, since it is mandatory.
+     *
+     * @param array $data
+     * @return array
+     */
+    public function addPaymentMethodData(array $data)
+    {
         // Merge in the payment method details (CC number, encrypted card, etc.)
 
-        $data = array_merge(
+        return array_merge(
             $data,
             $this->getPaymentMethodData()
         );
-
-        return $data;
     }
 
     /**
