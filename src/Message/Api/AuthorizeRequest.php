@@ -32,13 +32,6 @@ class AuthorizeRequest extends AbstractApiRequest
 
         $additionalData = [];
 
-        // Merge in the payment method details (CC number, encrypted card, etc.)
-
-        $additionalData = array_merge(
-            $additionalData,
-            $this->getPaymentMethodData()
-        );
-
         // Billing address, if supplied.
 
         if ($card = $this->getCard()) {
@@ -76,6 +69,13 @@ class AuthorizeRequest extends AbstractApiRequest
             'reference' => $this->getTransactionId(),
             'merchantAccount' => $this->getMerchantAccount(),
         ];
+
+        // Merge in the payment method details (CC number, encrypted card, etc.)
+
+        $data = array_merge(
+            $data,
+            $this->getPaymentMethodData()
+        );
 
         return $data;
     }
@@ -127,7 +127,11 @@ class AuthorizeRequest extends AbstractApiRequest
                 $data['expiryMonth'] = $card->getExpiryDate('m');
                 $data['holderName'] = $card->getName();
 
-                // Optional: cvc issueNumber startMonth startYear
+                if ($cvv = $card->getCvv()) {
+                    $data['cvc'] = $cvv;
+                }
+
+                // Optional: issueNumber, startMonth, startYear
             }
         }
 

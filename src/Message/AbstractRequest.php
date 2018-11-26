@@ -213,14 +213,15 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
             return $payload;
         }
 
-        // TODO: if comntent type if "utf8" then the body will contain a
+        // TODO: if content type is "utf8" then the body will contain a
         // text/plain error message that can be captured.
 
         throw new InvalidRequestException(sprintf(
-            'Unexpected content type "%s" and code "%s"; expecting "%s"',
+            'Unexpected content type "%s" and code "%s"; expecting "%s"; reason "%s"',
             $contentType,
             $response->getStatusCode(),
-            $this->returnContentType
+            $this->returnContentType,
+            $response->getReasonPhrase()
         ));
     }
 
