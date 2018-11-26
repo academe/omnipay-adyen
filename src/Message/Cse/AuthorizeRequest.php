@@ -13,8 +13,6 @@ use Omnipay\Adyen\Message\AbstractRequest;
 
 class AuthorizeRequest extends ApiAuthorizeRequest
 {
-    protected $endpointService = AbstractRequest::SERVICE_GROUP_PAYMENT_AUTHORISE;
-
     /**
      * @var string Name of the encrypted data POST parameter.
      */

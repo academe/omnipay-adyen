@@ -15,7 +15,7 @@ class CancelRequest extends AbstractApiRequest
      * originalMerchantReference (original transactionid) can be supplied
      * instead of the originalPspReferenec (transactionReference).
      */
-    public function getEndPoint($service = null)
+    public function getEndpoint()
     {
         $service = (
             $this->getRefundIfCaptured()

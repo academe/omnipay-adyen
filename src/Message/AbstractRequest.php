@@ -54,32 +54,27 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      */
 
     // Pal services.
-    protected $endpointPal = 'https://pal-{instance}.adyen.com/pal/servlet/{group}/{version}/{service}';
+    protected $urlTemplatePal = 'https://pal-{instance}.adyen.com/pal/servlet/{group}/{version}/{service}';
 
     // CSE JavaScript library.
-    protected $endpointCse = 'https://{instance}.adyen.com/hpp/cse/js/{token}.shtml';
+    protected $urlTemplateCse = 'https://{instance}.adyen.com/hpp/cse/js/{token}.shtml';
 
     // Directory services
     // {version} = VERSION_DIRECTORY
-    protected $endpointDirectory = 'https://{instance}.adyen.com/hpp/directory/{version}.shtml';
+    protected $urlTemplateDirectory = 'https://{instance}.adyen.com/hpp/directory/{version}.shtml';
 
     // Terminal services
-    protected $endpointTerminal = 'https://terminal-api-{instance}.adyen.com';
+    protected $urlTemplateTerminal = 'https://terminal-api-{instance}.adyen.com';
 
     // Checkout services
     // {version} = VERSION_CHECKOUT
-    protected $endpointCheckoutServices = 'https://checkout-{instance}.adyen.com/{version}/{service}';
+    protected $urlTemplateCheckoutServices = 'https://checkout-{instance}.adyen.com/{version}/{service}';
 
     // Checkout Utility
     // {version} = VERSION_CHECKOUT_UTILITY
-    protected $endpointCheckoutUtility = 'https://checkout-{instance}.adyen.com/{version}';
+    protected $urlTemplateCheckoutUtility = 'https://checkout-{instance}.adyen.com/{version}';
 
     protected $returnContentType = 'application/json';
-
-    /**
-     * @var string The path for the message.
-     */
-    protected $endpointPath = '';
 
     /**
      * Expand a URL template.
@@ -129,7 +124,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         $group = self::PAYMENT_GROUP_PAYMENT,
         $version = self::VERSION_PAYMENT_PAYMENT
     ) {
-        return $this->expandUrlTemplate($this->endpointPal, [
+        return $this->expandUrlTemplate($this->urlTemplatePal, [
             'instance' => ($this->getTestMode() ? static::INSTANCE_TEST : static::INSTANCE_LIVE),
             'service' => $service,
             'group' => $group,
@@ -165,7 +160,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
 
     public function getCseUrl($token)
     {
-        return $this->expandUrlTemplate($this->endpointCse, [
+        return $this->expandUrlTemplate($this->urlTemplateCse, [
             'instance' => ($this->getTestMode() ? static::INSTANCE_TEST : static::INSTANCE_LIVE),
             'token' => $token,
         ]);
@@ -176,7 +171,7 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
      */
     public function getDirectoryUrl($version = self::VERSION_DIRECTORY)
     {
-        return $this->expandUrlTemplate($this->endpointDirectory, [
+        return $this->expandUrlTemplate($this->urlTemplateDirectory, [
             'instance' => ($this->getTestMode() ? static::INSTANCE_TEST : static::INSTANCE_LIVE),
             'version' => $version,
         ]);

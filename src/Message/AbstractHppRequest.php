@@ -24,7 +24,7 @@ abstract class AbstractHppRequest extends AbstractRequest
     {
         $response = $this->httpClient->request(
             'POST',
-            $this->getEndpoint($this->endpointPath),
+            $this->getEndpoint(),
             [
                 'Content-Type' => 'application/x-www-form-urlencoded',
             ],
@@ -69,6 +69,4 @@ abstract class AbstractHppRequest extends AbstractRequest
     {
         return $this->setParameter('customerId', $value);
     }
-
-    abstract public function getEndPoint($service = null);
 }

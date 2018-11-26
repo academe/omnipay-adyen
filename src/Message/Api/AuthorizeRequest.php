@@ -12,20 +12,23 @@ use Omnipay\Adyen\Message\AbstractRequest;
 
 class AuthorizeRequest extends AbstractApiRequest
 {
-    protected $endpointService = AbstractRequest::SERVICE_GROUP_PAYMENT_AUTHORISE;
-
     public function createResponse($data)
     {
         return new AuthorizeResponse($this, $data);
     }
 
-    public function getEndpoint($service = null)
+    public function getEndpoint()
     {
-        return $this->getPaymentUrl($this->endpointService);
+        return $this->getPaymentUrl(
+            AbstractRequest::SERVICE_GROUP_PAYMENT_AUTHORISE
+        );
     }
 
     public function getData()
     {
+        // TODO: for API authorize only, we need username and password set
+        // to support Basic Auth needed for the API endpoint.
+
         $this->validate('amount', 'currency', 'merchantAccount', 'transactionId');
 
         // additionalData is populated from a number of sources.
@@ -66,7 +69,7 @@ class AuthorizeRequest extends AbstractApiRequest
         $data = [
             'additionalData' => $additionalData,
             'amount' => $amount,
-            'reference' => $this->getTransactionId(),
+            'reference' => (string)$this->getTransactionId(),
             'merchantAccount' => $this->getMerchantAccount(),
         ];
 

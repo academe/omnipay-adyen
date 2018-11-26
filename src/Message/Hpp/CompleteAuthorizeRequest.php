@@ -12,11 +12,6 @@ use Omnipay\Common\Exception\InvalidRequestException;
 
 class CompleteAuthorizeRequest extends AbstractHppRequest
 {
-    public function getEndPoint($service = null)
-    {
-        return;
-    }
-
     /**
      * The authorisation result is supplied as query parameters.
      */

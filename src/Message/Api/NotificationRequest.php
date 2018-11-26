@@ -397,7 +397,11 @@ class NotificationRequest extends AbstractRequest implements NotificationInterfa
      */
     public function getBillingAddress()
     {
-        return $this->getDataItem('billingAddress', null, $this->getAdditionalData());
+        return $this->getDataItem(
+            'billingAddress',
+            null,
+            $this->getAdditionalData()
+        );
     }
 
     /**

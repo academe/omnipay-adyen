@@ -49,6 +49,5 @@ abstract class AbstractApiRequest extends AbstractRequest
         return $data;
     }
 
-    abstract public function getEndPoint($service = null);
     abstract public function createResponse($payload);
 }

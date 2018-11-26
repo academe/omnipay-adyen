@@ -13,7 +13,12 @@ use Omnipay\Adyen\Message\AbstractRequest;
 
 class CompleteAuthorizeRequest extends ApiAuthorizeRequest
 {
-    protected $endpointService = AbstractRequest::SERVICE_GROUP_PAYMENT_AUTHORISE3D;
+    public function getEndpoint()
+    {
+        return $this->getPaymentUrl(
+            AbstractRequest::SERVICE_GROUP_PAYMENT_AUTHORISE3D
+        );
+    }
 
     public function getData()
     {

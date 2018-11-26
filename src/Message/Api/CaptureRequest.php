@@ -8,7 +8,7 @@ namespace Omnipay\Adyen\Message\Api;
 
 class CaptureRequest extends CancelRequest
 {
-    public function getEndPoint($service = null)
+    public function getEndpoint()
     {
         return $this->getPaymentUrl(static::SERVICE_GROUP_PAYMENT_CAPTURE);
     }

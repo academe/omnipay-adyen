@@ -11,14 +11,6 @@ use Omnipay\Adyen\Message\AbstractHppRequest;
 class AuthorizeRequest extends AbstractHppRequest
 {
     /**
-     * No services accessed here.
-     */
-    public function getEndpoint($service = null)
-    {
-        return;
-    }
-
-    /**
      * @inherit
      */
     public function getData()
