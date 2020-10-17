@@ -4,13 +4,6 @@ namespace Omnipay\Adyen;
 
 use Omnipay\Common\AbstractGateway as CommonAbstractGateway;
 use Omnipay\Adyen\Traits\GatewayParameters;
-
-/**
- * Adyen HPP (Hosted Payment Pages) Gateway.
- * Takes the user off the merchant site, but offers many local payment methods.
- * See https://docs.adyen.com/developers/ecommerce-integration/cse-integration-ecommerce
- */
-
 use Omnipay\Adyen\Message\FetchPaymentMethodsRequest;
 use Omnipay\Adyen\Message\AuthorizeRequest;
 use Omnipay\Adyen\Message\CompleteAuthorizeRequest;
@@ -32,6 +25,8 @@ abstract class AbstractGateway extends CommonAbstractGateway
             'skinCode' => null,
             // The sectet used for HMAC signing (HPP API)
             'secret' => null,
+
+            'apiKey' => null,
             // Cannot default currency without failing the tests.
             //'currency' => 'EUR',
             // publicKeyToken aka Library Token.
