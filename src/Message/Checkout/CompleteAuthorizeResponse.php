@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Omnipay\Adyen\Message\Checkout;
-
 
 use Omnipay\Adyen\Traits\DataWalker;
 use Omnipay\Common\Message\AbstractResponse;
@@ -42,5 +40,4 @@ class CompleteAuthorizeResponse extends AbstractResponse
     {
         return $this->getDataItem('pspReference');
     }
-
 }

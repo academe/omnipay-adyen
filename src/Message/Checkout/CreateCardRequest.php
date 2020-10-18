@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Omnipay\Adyen\Message\Checkout;
-
 
 use Omnipay\Adyen\Message\AbstractCheckoutRequest;
 use Omnipay\Adyen\Message\AbstractRequest;
@@ -29,7 +27,8 @@ class CreateCardRequest extends AbstractCheckoutRequest
             'paymentMethod',
             'currency',
             'transactionId',
-            'shopperReference');
+            'shopperReference'
+        );
 
         $data = [
             'amount' => [

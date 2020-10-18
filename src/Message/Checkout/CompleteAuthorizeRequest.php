@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Omnipay\Adyen\Message\Checkout;
-
 
 use Omnipay\Adyen\Message\AbstractCheckoutRequest;
 use Omnipay\Adyen\Message\AbstractRequest;
@@ -84,5 +82,4 @@ class CompleteAuthorizeRequest extends AbstractCheckoutRequest
     {
         $this->setParameter('details', $details);
     }
-
 }
