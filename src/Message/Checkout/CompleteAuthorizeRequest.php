@@ -6,7 +6,6 @@ namespace Omnipay\Adyen\Message\Checkout;
 
 use Omnipay\Adyen\Message\AbstractCheckoutRequest;
 use Omnipay\Adyen\Message\AbstractRequest;
-use Omnipay\Common\Exception\InvalidRequestException;
 
 class CompleteAuthorizeRequest extends AbstractCheckoutRequest
 {
@@ -39,6 +38,11 @@ class CompleteAuthorizeRequest extends AbstractCheckoutRequest
         return $data;
     }
 
+    public function getPaymentData()
+    {
+        return $this->getParameter('paymentData');
+    }
+
     /**
      * Merge the payment informatino data into the data array.
      * For the API (direct) authorise, the data is merged into
@@ -49,25 +53,16 @@ class CompleteAuthorizeRequest extends AbstractCheckoutRequest
      */
     public function addDetailsData(array $data)
     {
-        foreach($this->getDetails() as $detail) {
+        foreach ($this->getDetails() as $detail) {
             $data['details'][$detail['key']] = $this->getRequestParameter()[$detail['key']];
         }
+
         return $data;
     }
 
-    public function setPaymentData($paymentData)
+    public function getDetails()
     {
-        $this->setParameter('paymentData', $paymentData);
-    }
-
-    public function getPaymentData()
-    {
-        return $this->getParameter('paymentData');
-    }
-
-    public function setRequestParameter($requestParameter)
-    {
-        $this->setParameter('requestParameter', $requestParameter);
+        return $this->getParameter('details');
     }
 
     public function getRequestParameter()
@@ -75,14 +70,19 @@ class CompleteAuthorizeRequest extends AbstractCheckoutRequest
         return $this->getParameter('requestParameter');
     }
 
+    public function setPaymentData($paymentData)
+    {
+        $this->setParameter('paymentData', $paymentData);
+    }
+
+    public function setRequestParameter($requestParameter)
+    {
+        $this->setParameter('requestParameter', $requestParameter);
+    }
+
     public function setDetails($details)
     {
         $this->setParameter('details', $details);
-    }
-
-    public function getDetails()
-    {
-        return $this->getParameter('details');
     }
 
 }

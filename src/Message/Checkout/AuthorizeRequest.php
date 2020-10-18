@@ -7,8 +7,8 @@ namespace Omnipay\Adyen\Message\Checkout;
  */
 
 use Omnipay\Adyen\Message\AbstractCheckoutRequest;
-use Omnipay\Common\Exception\InvalidRequestException;
 use Omnipay\Adyen\Message\AbstractRequest;
+use Omnipay\Common\Exception\InvalidRequestException;
 
 class AuthorizeRequest extends AbstractCheckoutRequest
 {
@@ -26,8 +26,6 @@ class AuthorizeRequest extends AbstractCheckoutRequest
 
     public function getData()
     {
-        // TODO: for API authorize only, we need username and password set
-        // to support Basic Auth needed for the API endpoint.
         $this->validate('amount', 'currency', 'merchantAccount', 'transactionId');
 
         // additionalData is populated from a number of sources.
@@ -73,25 +71,25 @@ class AuthorizeRequest extends AbstractCheckoutRequest
             'shopperInteraction' => 'Ecommerce',
         ];
 
-        if(!empty($this->getShopperReference())) {
+        if (!empty($this->getShopperReference())) {
             $data['shopperReference'] = $this->getShopperReference();
         }
-        if(!empty($this->getReturnUrl())) {
+        if (!empty($this->getReturnUrl())) {
             $data['returnUrl'] = $this->getReturnUrl();
         }
-        if(!empty($this->getClientIp())) {
+        if (!empty($this->getClientIp())) {
             $data['shopperIP'] = $this->getClientIp();
         }
-        if(!empty($this->getBrowserInfo())) {
+        if (!empty($this->getBrowserInfo())) {
             $data['browserInfo'] = $this->getBrowserInfo();
         }
-        if(!empty($this->getOrigin())) {
+        if (!empty($this->getOrigin())) {
             $data['origin'] = $this->getOrigin();
         }
 
         $data = $this->addPaymentMethodData($data);
 
-        if(isset($data['paymentMethod']['storedPaymentMethodId'])) {
+        if (isset($data['paymentMethod']['storedPaymentMethodId'])) {
             $data['recurringProcessingModel'] = 'CardOnFile';
             $data['shopperInteraction'] = 'ContAuth';
         }
@@ -127,7 +125,7 @@ class AuthorizeRequest extends AbstractCheckoutRequest
      */
     public function getPaymentMethodData()
     {
-        if(count($this->getPaymentMethod()) > 0) {
+        if (count($this->getPaymentMethod()) > 0) {
             return ['paymentMethod' => $this->getPaymentMethod()];
         } else {
             return [];

@@ -41,7 +41,7 @@ trait GatewayParameters
     public function setSecret($value)
     {
         return $this->setParameter('secret', $value);
-     }
+    }
 
     /**
      * @return string|null
@@ -234,27 +234,33 @@ trait GatewayParameters
         return $this->setParameter('channel', $value);
     }
 
-    public function setShopperReference($shopperReference) {
+    public function setShopperReference($shopperReference)
+    {
         $this->setParameter('shopperReference', $shopperReference);
     }
 
-    public function getShopperReference() {
+    public function getShopperReference()
+    {
         return $this->getParameter('shopperReference');
     }
 
-    public function setBrowserInfo($browserInfo) {
+    public function setBrowserInfo($browserInfo)
+    {
         $this->setParameter('browserInfo', $browserInfo);
     }
 
-    public function getBrowserInfo() {
+    public function getBrowserInfo()
+    {
         return $this->getParameter('browserInfo');
     }
 
-    public function setOrigin($origin) {
+    public function setOrigin($origin)
+    {
         $this->setParameter('origin', $origin);
     }
 
-    public function getOrigin() {
+    public function getOrigin()
+    {
         return $this->getParameter('origin');
     }
 }

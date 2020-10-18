@@ -26,14 +26,14 @@ class AuthorizeRequestTest extends TestCase
         // Payment, defaults and all elements set.
 
         $this->assertSame(
-            'https://pal-live.adyen.com/pal/servlet/Payment/v30/authorise',
+            'https://pal-live.adyen.com/pal/servlet/Payment/v64/authorise',
             $request->getPaymentUrl(
                 $request::SERVICE_GROUP_PAYMENT_AUTHORISE
             )
         );
 
         $this->assertSame(
-            'https://pal-live.adyen.com/pal/servlet/Payment/v30/authorise3d',
+            'https://pal-live.adyen.com/pal/servlet/Payment/v64/authorise3d',
             $request->getPaymentUrl(
                 $request::SERVICE_GROUP_PAYMENT_AUTHORISE3D,
                 $request::PAYMENT_GROUP_PAYMENT,
@@ -120,14 +120,14 @@ class AuthorizeRequestTest extends TestCase
         // Payment, defaults and all elements set.
 
         $this->assertSame(
-            'https://pal-test.adyen.com/pal/servlet/Payment/v30/authorise',
+            'https://pal-test.adyen.com/pal/servlet/Payment/v64/authorise',
             $request->getPaymentUrl(
                 $request::SERVICE_GROUP_PAYMENT_AUTHORISE
             )
         );
 
         $this->assertSame(
-            'https://pal-test.adyen.com/pal/servlet/Payment/v30/authorise3d',
+            'https://pal-test.adyen.com/pal/servlet/Payment/v64/authorise3d',
             $request->getPaymentUrl(
                 $request::SERVICE_GROUP_PAYMENT_AUTHORISE3D,
                 $request::PAYMENT_GROUP_PAYMENT,

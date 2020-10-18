@@ -2,10 +2,9 @@
 
 namespace Omnipay\Adyen\Message\Checkout;
 
-use Omnipay\Common\Message\ResponseInterface;
+use Omnipay\Adyen\Traits\DataWalker;
 use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RedirectResponseInterface;
-use Omnipay\Adyen\Traits\DataWalker;
 
 class AuthorizeResponse extends AbstractResponse implements RedirectResponseInterface
 {
@@ -14,12 +13,12 @@ class AuthorizeResponse extends AbstractResponse implements RedirectResponseInte
     /**
      * @var valus for the resultCode.
      */
-    const RESULT_CODE_AUTHORISED        = "Authorised";
-    const RESULT_CODE_REFUSED           = "Refused";
-    const RESULT_CODE_ERROR             = "Error";
-    const RESULT_CODE_CANCELLED         = "Cancelled";
-    const RESULT_CODE_RECEIVED          = "Received";
-    const RESULT_CODE_REDIRECTSHOPPER   = "RedirectShopper";
+    const RESULT_CODE_AUTHORISED = "Authorised";
+    const RESULT_CODE_REFUSED = "Refused";
+    const RESULT_CODE_ERROR = "Error";
+    const RESULT_CODE_CANCELLED = "Cancelled";
+    const RESULT_CODE_RECEIVED = "Received";
+    const RESULT_CODE_REDIRECTSHOPPER = "RedirectShopper";
 
     const SECURE_3D_SMS_VERIFICATION = 'CUPSecurePlus-CollectSMSVerificationCode';
 
@@ -28,7 +27,23 @@ class AuthorizeResponse extends AbstractResponse implements RedirectResponseInte
     public function isSuccessful()
     {
         return $this->getResultCode() === static::RESULT_CODE_AUTHORISED
-            && ! $this->getMessage();
+            && !$this->getMessage();
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getResultCode()
+    {
+        return $this->getDataItem('resultCode');
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getMessage()
+    {
+        return $this->getDataItem('refusalReason');
     }
 
     public function isCancelled()
@@ -55,7 +70,8 @@ class AuthorizeResponse extends AbstractResponse implements RedirectResponseInte
     /**
      * Returns data for POST redirecting
      */
-    public function getRedirectData() {
+    public function getRedirectData()
+    {
         return $this->getDataItem('action')['data'];
     }
 
@@ -92,25 +108,9 @@ class AuthorizeResponse extends AbstractResponse implements RedirectResponseInte
     /**
      * @return string|null
      */
-    public function getResultCode()
-    {
-        return $this->getDataItem('resultCode');
-    }
-
-    /**
-     * @return string|null
-     */
     public function getCode()
     {
         return $this->getResultCode();
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getMessage()
-    {
-        return $this->getDataItem('refusalReason');
     }
 
     /**
@@ -120,15 +120,6 @@ class AuthorizeResponse extends AbstractResponse implements RedirectResponseInte
     public function getPaymentMethod()
     {
         return $this->getDataItem('additionalData.paymentMethod');
-    }
-
-    /**
-     * Get raw card expiryDate in MM/YYYY format.
-     * @return string|null
-     */
-    public function getRawExpiryDate()
-    {
-        return $this->getDataItem('additionalData.expiryDate');
     }
 
     /**
@@ -147,6 +138,15 @@ class AuthorizeResponse extends AbstractResponse implements RedirectResponseInte
     }
 
     /**
+     * Get raw card expiryDate in MM/YYYY format.
+     * @return string|null
+     */
+    public function getRawExpiryDate()
+    {
+        return $this->getDataItem('additionalData.expiryDate');
+    }
+
+    /**
      * Get raw card expiry year in YYYY (four digit) format.
      * @return string|null
      */
@@ -161,6 +161,11 @@ class AuthorizeResponse extends AbstractResponse implements RedirectResponseInte
         }
     }
 
+    public function getNumberLastFour()
+    {
+        return $this->getCardSummary();
+    }
+
     /**
      * Get the last four digits of the credit card.
      *
@@ -171,9 +176,12 @@ class AuthorizeResponse extends AbstractResponse implements RedirectResponseInte
         return $this->getDataItem('additionalData.cardSummary');
     }
 
-    public function getNumberLastFour()
+    /**
+     * @return string|null alias for the cardholder name
+     */
+    public function getName()
     {
-        return $this->getCardSummary();
+        return $this->getCardHolderName();
     }
 
     /**
@@ -186,19 +194,13 @@ class AuthorizeResponse extends AbstractResponse implements RedirectResponseInte
         return $this->getDataItem('additionalData.cardHolderName');
     }
 
-    /**
-     * @return string|null alias for the cardholder name
-     */
-    public function getName()
+    public function getDetails()
     {
-        return $this->getCardHolderName();
-    }
-
-    public function getDetails() {
         return $this->getDataItem('details');
     }
 
-    public function getPaymentData() {
+    public function getPaymentData()
+    {
         return $this->getDataItem('action.paymentData');
     }
 }

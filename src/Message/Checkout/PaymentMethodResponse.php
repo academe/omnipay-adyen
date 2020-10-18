@@ -16,8 +16,8 @@ class PaymentMethodResponse extends AbstractResponse
         return count($this->getData()) > 0;
     }
 
-    public function getPaymentMethodsResponse() {
+    public function getPaymentMethodsResponse()
+    {
         return json_encode($this->data);
     }
-
 }

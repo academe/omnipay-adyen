@@ -28,14 +28,14 @@ class CompleteAuthorizeResponse extends AbstractResponse
             && !$this->getMessage();
     }
 
-    public function isCancelled()
-    {
-        return $this->getResultCode() === static::RESULT_CODE_CANCELLED;
-    }
-
     public function getResultCode()
     {
         return $this->getDataItem('resultCode');
+    }
+
+    public function isCancelled()
+    {
+        return $this->getResultCode() === static::RESULT_CODE_CANCELLED;
     }
 
     public function getTransactionReference()

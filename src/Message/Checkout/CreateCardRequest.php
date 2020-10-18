@@ -48,11 +48,13 @@ class CreateCardRequest extends AbstractCheckoutRequest
         return $data;
     }
 
-    public function setPaymentMethod($paymentMethod) {
-        $this->setParameter('paymentMethod', $paymentMethod);
+    public function getPaymentMethod()
+    {
+        return $this->getParameter('paymentMethod');
     }
 
-    public function getPaymentMethod() {
-        return $this->getParameter('paymentMethod');
+    public function setPaymentMethod($paymentMethod)
+    {
+        $this->setParameter('paymentMethod', $paymentMethod);
     }
 }
