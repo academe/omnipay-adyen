@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Omnipay\Adyen\Message;
-
 
 abstract class AbstractCheckoutRequest extends AbstractApiRequest
 {
@@ -10,7 +8,7 @@ abstract class AbstractCheckoutRequest extends AbstractApiRequest
     /**
      * Send the request with specified data.
      *
-     * @param  array $data The data to send
+     * @param array $data The data to send
      * @return Omnipay\Common\Message\ResponseInterface
      * @throws InvalidRequestException
      */
@@ -22,7 +20,7 @@ abstract class AbstractCheckoutRequest extends AbstractApiRequest
             [
                 'Content-Type' => 'application/json',
                 // Basic auth header.
-                'x-api-key' => $this->getApiKey()
+                'x-api-key' => $this->getApiKey(),
             ],
             json_encode($data)
         );

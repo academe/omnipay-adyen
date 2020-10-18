@@ -14,18 +14,18 @@ class CompleteAuthorizeResponse extends AbstractResponse
     /**
      * @var valus for the resultCode.
      */
-    const RESULT_CODE_AUTHORISED        = "Authorised";
-    const RESULT_CODE_REFUSED           = "Refused";
-    const RESULT_CODE_ERROR             = "Error";
-    const RESULT_CODE_CANCELLED         = "Cancelled";
-    const RESULT_CODE_RECEIVED          = "Received";
+    const RESULT_CODE_AUTHORISED = "Authorised";
+    const RESULT_CODE_REFUSED = "Refused";
+    const RESULT_CODE_ERROR = "Error";
+    const RESULT_CODE_CANCELLED = "Cancelled";
+    const RESULT_CODE_RECEIVED = "Received";
 
     protected $payload;
 
     public function isSuccessful()
     {
         return $this->getResultCode() === static::RESULT_CODE_AUTHORISED
-            && ! $this->getMessage();
+            && !$this->getMessage();
     }
 
     public function isCancelled()

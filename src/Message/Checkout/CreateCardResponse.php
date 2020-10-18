@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Omnipay\Adyen\Message\Checkout;
-
 
 use Omnipay\Adyen\Traits\DataWalker;
 use Omnipay\Common\Message\AbstractResponse;
@@ -16,8 +14,8 @@ class CreateCardResponse extends AbstractResponse
         return (isset($this->data['resultCode']) && $this->data['resultCode'] == 'Authorised');
     }
 
-    public function getToken() {
+    public function getToken()
+    {
         return $this->data['additionalData']['recurring.recurringDetailReference'];
     }
-
 }

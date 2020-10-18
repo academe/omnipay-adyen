@@ -95,7 +95,8 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         return $template;
     }
 
-    public function getCheckoutUrl($service, $version = self::VERSION_CHECKOUT) {
+    public function getCheckoutUrl($service, $version = self::VERSION_CHECKOUT)
+    {
         return $this->expandUrlTemplate($this->urlTemplateCheckoutServices, [
             'instance' => ($this->getTestMode() ? static::INSTANCE_TEST : static::INSTANCE_LIVE),
             'service' => $service,

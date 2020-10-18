@@ -46,7 +46,7 @@ class CheckoutGateway extends ApiGateway
     }
 
     public function completeAuthorize(array $parameters = array())
-    {;
+    {
         return $this->createRequest(CompleteAuthorizeRequest::class, $parameters);
     }
 }
