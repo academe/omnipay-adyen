@@ -18,9 +18,9 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     const INSTANCE_TEST = 'test';
 
     const VERSION_DIRECTORY         = 'v2';
-    const VERSION_CHECKOUT          = 'v64';
+    const VERSION_CHECKOUT          = 'v67';
     const VERSION_CHECKOUT_UTILITY  = 'v1';
-    const VERSION_PAYMENT_PAYMENT   = 'v64';
+    const VERSION_PAYMENT_PAYMENT   = 'v67';
     const VERSION_PAYMENT_RECURRING = 'v25';
     const VERSION_PAYMENT_PAYOUT    = 'v30';
 
@@ -72,10 +72,12 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     // Checkout services
     // {version} = VERSION_CHECKOUT
     protected $urlTemplateCheckoutServices = 'https://checkout-{instance}.adyen.com/{version}/{service}';
+    //protected $urlTemplateCheckoutServices = 'https://xxx-xxx-checkout-{instance}.adyenpayments.com/checkout/{version}/{service}';
 
     // Checkout Utility
     // {version} = VERSION_CHECKOUT_UTILITY
     protected $urlTemplateCheckoutUtility = 'https://checkout-{instance}.adyen.com/{version}';
+    //protected $urlTemplateCheckoutUtility = 'https:/xxx-xxx-checkout-{instance}.adyenpayments.com/checkout/{version}';
 
     protected $returnContentType = 'application/json';
 
@@ -216,7 +218,6 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
             $payload = json_decode($body, true);
 
             // TODO: check for JSON errors after parsing.
-
             return $payload;
         }
 
