@@ -19,21 +19,17 @@ abstract class AbstractGateway extends CommonAbstractGateway
     public function getDefaultParameters()
     {
         return [
-            // Identifies the main account
-            'merchantAccount' => null,
-            // Identifies the sub-account
+            'merchantAccount' => '',
             'skinCode' => null,
-            // The sectet used for HMAC signing (HPP API)
-            'secret' => null,
-
-            'apiKey' => null,
-            // Cannot default currency without failing the tests.
-            //'currency' => 'EUR',
-            // publicKeyToken aka Library Token.
-            'publicKeyToken' => null,
-            // WebServiceUser credentials (basic auth for server API).
-            'username' => null,
-            'password' => null,
+            'secret' => '',
+            'apiKey' => 'AQFEhmfxKYLOYhFCw0m/n3Q5qf3VY45bBJ1kV2pEynmlmmNZqcJ0I8ltEyNoAf7r8Km7vnJJWdFEMesxJMLukmQ+F0WAzS8QwV1bDb7kfNy1WIxIIkxgBw==-Oa33c1p6FNEEU0LtFmDCGNCf9x65Rrcxzg220ucPSpQ=-t}<=<$S4a$>jVkY$',
+            'currency' => 'EUR',
+            'publicKeyToken' => '',             // publicKeyToken aka Library Token.
+            'username' => '',
+            'password' => '',
+            'testMode' => true,
+            'shopperLocale' => 'nl_NL',
+            'countryCode' => 'nl'
         ];
     }
 }
