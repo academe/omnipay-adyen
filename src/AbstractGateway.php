@@ -22,7 +22,7 @@ abstract class AbstractGateway extends CommonAbstractGateway
             'merchantAccount' => '',
             'skinCode' => null,
             'secret' => '',
-            'apiKey' => 'AQFEhmfxKYLOYhFCw0m/n3Q5qf3VY45bBJ1kV2pEynmlmmNZqcJ0I8ltEyNoAf7r8Km7vnJJWdFEMesxJMLukmQ+F0WAzS8QwV1bDb7kfNy1WIxIIkxgBw==-Oa33c1p6FNEEU0LtFmDCGNCf9x65Rrcxzg220ucPSpQ=-t}<=<$S4a$>jVkY$',
+            'apiKey' => '',
             'currency' => 'EUR',
             'publicKeyToken' => '',             // publicKeyToken aka Library Token.
             'username' => '',
