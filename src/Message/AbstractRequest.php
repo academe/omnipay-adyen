@@ -18,9 +18,9 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     const INSTANCE_TEST = 'test';
 
     const VERSION_DIRECTORY         = 'v2';
-    const VERSION_CHECKOUT          = 'v32';
+    const VERSION_CHECKOUT          = 'v64';
     const VERSION_CHECKOUT_UTILITY  = 'v1';
-    const VERSION_PAYMENT_PAYMENT   = 'v30';
+    const VERSION_PAYMENT_PAYMENT   = 'v64';
     const VERSION_PAYMENT_RECURRING = 'v25';
     const VERSION_PAYMENT_PAYOUT    = 'v30';
 
@@ -36,6 +36,9 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
     const SERVICE_GROUP_PAYMENT_CANCELORREFUND      = 'cancelOrRefund';
     const SERVICE_GROUP_PAYMENT_VOIDPENDINGREFUND   = 'voidPendingRefund';
     const SERVICE_GROUP_PAYMENT_REFUNDWITHDATA      = 'refundWithData';
+    const SERVICE_GROUP_PAYMENT_PAYMENTMETHODS      = 'paymentMethods';
+    const SERVICE_GROUP_PAYMENT_PAYMENTS            = 'payments';
+    const SERVICE_GROUP_PAYMENT_PAYMENTS_DETAILS    = 'payments/details';
 
     const SERVICE_GROUP_RECURRING_LISTRECURRINGDETAILS      = 'listRecurringDetails';
     const SERVICE_GROUP_RECURRING_DISABLE                   = 'disable';
@@ -90,6 +93,15 @@ abstract class AbstractRequest extends OmnipayAbstractRequest
         }
 
         return $template;
+    }
+
+    public function getCheckoutUrl($service, $version = self::VERSION_CHECKOUT)
+    {
+        return $this->expandUrlTemplate($this->urlTemplateCheckoutServices, [
+            'instance' => ($this->getTestMode() ? static::INSTANCE_TEST : static::INSTANCE_LIVE),
+            'service' => $service,
+            'version' => $version,
+        ]);
     }
 
     /**

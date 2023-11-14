@@ -1,6 +1,6 @@
 # Omnipay: Adyen
 
-**Adyen driver (HPP, CSE and API integration) for the Omnipay PHP payment processing library**
+**Adyen driver (HPP, CSE, Online Payments and API integration) for the Omnipay PHP payment processing library**
 
 [![Build Status](https://travis-ci.org/academe/omnipay-adyen.svg?branch=master)](https://travis-ci.org/academe/omnipay-adyen)
 [![Latest Stable Version](https://poser.pugx.org/academe/omnipay-adyen/version.png)](https://packagist.org/packages/academe/omnipay-adyen)
@@ -15,6 +15,7 @@ Table of Contents
    * [Omnipay: Adyen](#omnipay-adyen)
    * [Table of Contents](#table-of-contents)
       * [Installation](#installation)
+      * [General](#general)
       * [Hosted Payment Pages (HPP)](#hosted-payment-pages-hpp)
          * [Server Fetches Payment Methods](#server-fetches-payment-methods)
          * [Client Fetches Payment Methods](#client-fetches-payment-methods)
@@ -26,6 +27,15 @@ Table of Contents
          * [Building a Form for Encrypting](#building-a-form-for-encrypting)
          * [An Encrypted Card Authorises a Payment](#an-encrypted-card-authorises-a-payment)
          * [3D Secure Response](#3d-secure-response)
+      * [Online Payments (Checkout)](#online-paymens-checkout)
+         * [Drop-In](#drop-in)
+            * [Building the drop-in](#building-the-drop-in)
+            * [Payment Methods Request](#payment-methods-request)
+         * [Tokenize a card](#tokenize-a-card)
+            * [Create a Card](#create-a-card)
+         * [Authorize a Payment](#authorize-a-payment)
+            * [Prepare for authorize redirect](#prepare-for-authorize-redirect)
+            * [Complete on Return](#complete-on-return)
       * [Notifications](#notifications)
          * [Notification Server Request (from gateway)](#notification-server-request-from-gateway)
          * [Notification Response (to gateway)](#notification-response-to-gateway)
@@ -39,7 +49,27 @@ Omnipay is installed via [Composer](http://getcomposer.org/).
 composer require academe/omnipay-adyen
 ```
 
+## General
+
+This omnipay integration for adyen provides multiple APIs.
+
+Adyen provides the newest API implementations as "Online Payments"
+
+"Online Payments" supports:
+- Pay by Link
+- Drop-in
+- Components
+- API-Only
+- iOS
+- Android
+
+Deprecated by adyen but still implemented:
+- Hosted Payment Pages (HPP)
+- Client Side Encryption (CSE)
+
 ## Hosted Payment Pages (HPP)
+
+!!! deprecated !!!
 
 This method hosts the payment pages on the gateway, and the user is
 sent to those pages on the gateway to make a payment.
@@ -342,6 +372,8 @@ with the final result being supplied by a `notification`.
 
 ## Client Side Encryption (CSE)
 
+!!! deprecated !!!
+
 The Adyen gateway allows a credit card form to be used directly in your application page.
 The credit card details are not directly submitted to your merchant site,
 but are encrypted at the client (browser), and the encrypted string is then submitted to
@@ -494,6 +526,141 @@ $response = $request->send();
 
 The `$response` will be the final response, as you would get without
 the additional 3D Secure step if it was not enabled or available.
+
+## Online Payments (Checkout)
+The recommended adyen method is the [Checkout API](https://docs.adyen.com/checkout).
+It supports a [Drop-in](https://docs.adyen.com/checkout/drop-in-web) which dynamically offers payment methods based on the transaction details.
+Also you can use "[Pay by Link](https://docs.adyen.com/checkout/pay-by-link)", single "[Components](https://docs.adyen.com/checkout/components-web)", "[API only](https://docs.adyen.com/checkout/api-only)".
+
+### Drop-in
+The most powerful and recommended solutions is using the [Drop-in](https://docs.adyen.com/checkout/drop-in-web).
+It dynamically shows all available payment methods to the user and returns a javascript state array onSubmit() with the paymentMethod details to use for later payments.
+3D Secure 2 required information are also provided by the drop-in. Please refer to the Adyen Documentation for more information.
+
+#### Building the drop-in
+```html
+<html>
+    <head>
+        <script src="https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/3.14.1/adyen.js"
+                integrity="sha384-6CKCjdBJ5e8ODBkoPb8aS4NUVZUT84+EwcOq/EdHIQJsHXZyRy4Hzmlo3Cm/3VX3"
+                crossorigin="anonymous"></script>
+        <link rel="stylesheet"
+              href="https://checkoutshopper-live.adyen.com/checkoutshopper/sdk/3.14.1/adyen.css"
+              integrity="sha384-dNVP3hcwQ/DJnbhWtKjt/xpYSDyS1Ch8m8tnxNehvZoGzcrjeGuKk9/dGstY+vxu"
+              crossorigin="anonymous">
+    </head>
+    <body>
+        <div id="dropin-container"></div>
+        <script>
+            const configuration = {
+                paymentMethodsResponse: "PAYMENT_RESPONSE", // The `/paymentMethods` response from the server.
+                clientKey: "YOUR_CLIENT_KEY", // Web Drop-in versions before 3.10.1 use originKey instead of clientKey.
+                locale: "de-DE",
+                environment: "test",
+                paymentMethodsConfiguration: {
+                    card: { // Example optional configuration for Cards
+                        hasHolderName: true,
+                        holderNameRequired: true,
+                        enableStoreDetails: true,
+                        hideCVC: false, // Change this to true to hide the CVC field for stored cards
+                        name: 'Credit or debit card'
+                    }
+                },
+                onSubmit: (state, dropin) => {
+                    if(state.isValid) {
+                        // Do any action if the payment information are correct.
+                        // E.g. ajax call, to tokenize the informatio if it's a credit card and use the information returned.
+                    }
+                },
+            };
+            const checkout = new AdyenCheckout(configuration);
+            const dropin = checkout.create('dropin').mount('#dropin-container');
+        </script>
+    </body>
+</html>
+```
+
+#### Payment Methods Request
+To get all necessary data to pass to the Drop-in, you can use the paymentMethods()-function of the Checkout gateway.
+
+```php
+$request = $gateway->paymentMethods([
+    'amount' => 11.99,
+    'currency' => 'EUR',
+    'countryCode' = 'DE',
+    'channel' = 'Web',
+    'shopperLocale' = 'de-DE',
+    'shopperReference' = 'MyUniqueShopperReference'
+]);
+
+$response = $request->send();
+$paymentMethods = $response->getPaymentMethodsResponse();
+```
+
+The `shopperReference` is required, if you want to show stored payment details to your customer.
+
+### Tokenize a card
+You can tokenize card credentials for later use. Card encryption is used by default, if using the drop-in or components.
+As of today, only card creation is possible in this implementation. Feel free to add a PR.
+
+#### Create a Card
+
+```php
+$request = $gateway->paymentMethods([
+    'paymentMethod' => $paymentMethod,
+    'currency' => 'EUR',
+    'transactionId' => 'TOKENIZATION_TRANSACTION_ID',
+    'shopperReference' => 'MyUniqueShopperReference'
+]);
+
+$response = $request->send();
+```
+
+### Authorize a Payment
+Authorize is Omnipay default behavior. Please take a look at the [documentation](https://docs.adyen.com/api-explorer/#/CheckoutService/v64/overview) for required fields for 3DS.
+
+```php
+$request = $gateway->authorize([
+    'paymentMethod' => $paymentMethod, // Drop-in provided, you can also use the card parameters with unencrypted data
+    'amount' => 11.99,
+    'currency' => 'EUR',
+    'transactionId' => 'YOUR_TRANSACTION_ID',
+    'returnUrl' => 'https://merchant-site.example.com/payment-handler', // This is used for payment options which needs a redirect like giropay, 3DS
+    '3DSecure' => false // If true, you need to specifiy much more. Please refer to Adyen documentation.
+]);
+
+$response = $request->send();
+```
+
+#### Prepare for authorize redirect
+In some cases you have to redirect the user to another website. Those websites will redirect the user back to your returnUrl.
+The Authorize Request won't be successful in such cases. But isRedirect() would be true.
+
+```php
+$response = $authorizeRequest->send();
+if(!$response->isSuccessful()) {
+    if($response->isRedirect()) {
+        $response->redirect(); // This will redirect immediatly. In most cases, you want to use getRedirectResponse or getRedirectUrl
+    }
+}
+```
+
+Be careful with self-made redirects. Some providers are redirected with a POST-Request with additional Data.
+Better use getRedirectResponse() then.
+
+#### Complete on Return
+
+Cause we don't know all information we need to parse the response of the payment type, we have to provide some things.
+
+```php
+$request = $gateway->completeAuthorize([
+    'requestParameter' => $_REQUEST, // Include $_POST and $_GET parameters!
+    'details' => $authorizeResponse->getData()['details'], // Details a list of fields, which are returned by the payent type
+    'paymentData' => $authorizeResponse->getData()['paymentData'], // Some payment information.
+]);
+
+$response = $request->send();
+```
 
 ## Notifications
 

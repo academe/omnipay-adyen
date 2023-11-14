@@ -44,6 +44,19 @@ trait GatewayParameters
     }
 
     /**
+     * @return string|null
+     */
+    public function getApiKey()
+    {
+        return $this->getParameter('apiKey');
+    }
+
+    public function setApiKey($value)
+    {
+        return $this->setParameter('apiKey', $value);
+    }
+
+    /**
      * Will be a hex string set in
      * Settings -> Server Communication -> Standard Notification
      * @return string|null
@@ -206,5 +219,48 @@ trait GatewayParameters
         }
 
         return $this->setBlockedMethods($methods);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getChannel()
+    {
+        return $this->getParameter('channel');
+    }
+
+    public function setChannel($value)
+    {
+        return $this->setParameter('channel', $value);
+    }
+
+    public function setShopperReference($shopperReference)
+    {
+        $this->setParameter('shopperReference', $shopperReference);
+    }
+
+    public function getShopperReference()
+    {
+        return $this->getParameter('shopperReference');
+    }
+
+    public function setBrowserInfo($browserInfo)
+    {
+        $this->setParameter('browserInfo', $browserInfo);
+    }
+
+    public function getBrowserInfo()
+    {
+        return $this->getParameter('browserInfo');
+    }
+
+    public function setOrigin($origin)
+    {
+        $this->setParameter('origin', $origin);
+    }
+
+    public function getOrigin()
+    {
+        return $this->getParameter('origin');
     }
 }
