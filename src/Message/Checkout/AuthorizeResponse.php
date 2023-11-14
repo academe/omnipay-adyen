@@ -64,7 +64,7 @@ class AuthorizeResponse extends AbstractResponse implements RedirectResponseInte
      */
     public function getRedirectUrl()
     {
-        return $this->getDataItem('redirect')['url'];
+        return $this->getDataItem('action')['url'];
     }
 
     /**
@@ -72,7 +72,7 @@ class AuthorizeResponse extends AbstractResponse implements RedirectResponseInte
      */
     public function getRedirectData()
     {
-        return $this->getDataItem('action')['data'];
+        return $this->getDataItem('action')['redirectData'];
     }
 
     /**
@@ -80,7 +80,7 @@ class AuthorizeResponse extends AbstractResponse implements RedirectResponseInte
      */
     public function getRedirectMethod()
     {
-        return $this->getDataItem('redirect')['method'];
+        return $this->getDataItem('action')['method'];
     }
 
     /**
@@ -95,6 +95,7 @@ class AuthorizeResponse extends AbstractResponse implements RedirectResponseInte
             if (is_array($this->payload)) {
                 $this->payload = $this->expandKeys($this->payload);
             }
+
         }
 
         return $this->payload;

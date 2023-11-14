@@ -29,6 +29,11 @@ class CheckoutGateway extends ApiGateway
         return $this->createRequest(AuthorizeRequest::class, $parameters);
     }
 
+    public function purchase(array $parameters = array())
+    {
+        return $this->createRequest(AuthorizeRequest::class, $parameters);
+    }
+
     /**
      * Helper for generating data needed in a dropin form.
      */
@@ -46,6 +51,11 @@ class CheckoutGateway extends ApiGateway
     }
 
     public function completeAuthorize(array $parameters = array())
+    {
+        return $this->createRequest(CompleteAuthorizeRequest::class, $parameters);
+    }
+
+    public function completePurchase(array $parameters = array())
     {
         return $this->createRequest(CompleteAuthorizeRequest::class, $parameters);
     }

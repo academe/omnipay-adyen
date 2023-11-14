@@ -66,9 +66,9 @@ class AuthorizeRequest extends AbstractCheckoutRequest
         $data = [
             'additionalData' => $additionalData,
             'amount' => $amount,
-            'reference' => (string)$this->getTransactionId(),
+            'reference' => 'GISPENOUTLETNL-'.(string)$this->getTransactionId(),
             'merchantAccount' => $this->getMerchantAccount(),
-            'shopperInteraction' => 'Ecommerce',
+            'shopperInteraction' => 'Ecommerce'
         ];
 
         if (!empty($this->getShopperReference())) {
@@ -128,7 +128,7 @@ class AuthorizeRequest extends AbstractCheckoutRequest
         if (count($this->getPaymentMethod()) > 0) {
             return ['paymentMethod' => $this->getPaymentMethod()];
         } else {
-            return [];
+           return [];
         }
     }
 

@@ -24,14 +24,17 @@ class CompleteAuthorizeRequest extends AbstractCheckoutRequest
     {
         // TODO: for API authorize only, we need username and password set
         // to support Basic Auth needed for the API endpoint.
-        $this->validate('details', 'paymentData', 'requestParameter');
+  
+        //$this->validate('details');
 
         $data = [
-            'paymentData' => $this->getPaymentData(),
-            'details' => [],
+           // 'paymentData' => $this->getPaymentData(),
+            'details' => [
+                'redirectResult' => $_REQUEST['redirectResult']
+            ],
         ];
 
-        $data = $this->addDetailsData($data);
+        //$data = $this->addDetailsData($data);
 
         return $data;
     }
